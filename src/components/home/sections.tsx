@@ -115,7 +115,7 @@ export function HeroSection() {
             transition={{ duration: 0.7, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
           >
             <BlobImage
-              src="/images/dog.png"
+              src="/images/dog5.png"
               alt="Happy dog with trainer"
               className="mx-auto aspect-[4/5] w-full max-w-md shadow-card lg:max-w-none"
               priority
