@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>United Pets — Grooming</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --pink:#e6266f;
+    --pink-dark:#d21962;
+    --blue:#1c58a9;
+    --blue-dark:#164a91;
+    --navy:#182b49;
+    --text-grey:#7a8291;
+    --light-grey:#f4f5f7;
+    --footer-grey:#eef0f2;
+    --border-grey:#e4e6ea;
+    --dark-bar:#141d2e;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    font-family:'Open Sans', sans-serif;
+    color:#4c5566;
+    line-height:1.7;
+    background:#fff;
+  }
+  h1,h2,h3,h4,.brand,.nav a,.btn,.footer-col h4{
+    font-family:'Poppins', sans-serif;
+  }
+  a{text-decoration:none;color:inherit;}
+  ul{list-style:none;}
+  img{max-width:100%;display:block;}
+  .container{max-width:1200px;margin:0 auto;padding:0 20px;}
+
+  /* ===== TOP BAR ===== */
+  .topbar{background:var(--blue);color:#fff;font-size:13px;}
+  .topbar .container{display:flex;justify-content:space-between;align-items:center;height:46px;}
+  .topbar-left{display:flex;gap:28px;}
+  .topbar-left span{display:flex;align-items:center;gap:7px;opacity:.95;}
+  .topbar-social{display:flex;gap:14px;font-size:13px;}
+  .topbar-social a{width:26px;height:26px;display:flex;align-items:center;justify-content:center;opacity:.9;}
+
+  /* ===== HEADER ===== */
+  header.main{background:#fff;border-bottom:1px solid var(--border-grey);}
+  .main .container{display:flex;align-items:center;justify-content:space-between;height:96px;}
+  .brand{display:flex;align-items:center;gap:12px;}
+  .brand .paw-icon{width:52px;height:52px;border:2.5px solid var(--navy);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;}
+  .brand-text{line-height:1.15;}
+  .brand-text .b1{display:block;font-size:19px;font-weight:600;letter-spacing:2px;color:var(--navy);}
+  .brand-text .b2{display:block;font-size:23px;font-weight:800;letter-spacing:2px;color:var(--navy);}
+
+  .nav{display:flex;align-items:center;gap:34px;}
+  .nav ul{display:flex;gap:30px;}
+  .nav a{font-size:14.5px;font-weight:600;color:var(--navy);display:flex;align-items:center;gap:5px;}
+  .nav li.active a{color:var(--pink);}
+  .nav .caret{font-size:9px;opacity:.6;margin-top:1px;}
+  .cart-icon{font-size:19px;position:relative;color:var(--navy);}
+  .cart-icon sup{position:absolute;top:-8px;right:-10px;font-size:10px;color:var(--pink);font-weight:700;}
+
+  /* ===== HERO ===== */
+  .hero{position:relative;height:430px;overflow:hidden;}
+  .hero img{width:100%;height:100%;object-fit:cover;}
+  .hero-overlay{position:absolute;inset:0;background:linear-gradient(90deg, rgba(10,15,25,.35) 0%, rgba(10,15,25,0) 55%);}
+  .hero-content{position:absolute;left:0;bottom:70px;color:#fff;}
+  .hero-content .container{width:100%;}
+  .hero-content h1{font-size:56px;font-weight:600;margin-bottom:22px;letter-spacing:1px;}
+  .breadcrumb-pill{display:inline-block;background:var(--pink);color:#fff;padding:9px 22px;font-size:13px;font-weight:600;letter-spacing:.3px;}
+
+  /* ===== SERVICE DETAIL ===== */
+  .service-detail{padding:90px 0;}
+  .service-detail .container{display:grid;grid-template-columns:2.1fr 1fr;gap:60px;align-items:start;}
+
+  .sd-main h2{font-size:32px;font-weight:700;color:var(--navy);margin-bottom:16px;}
+  .sd-main .lead{font-size:16px;color:var(--text-grey);margin-bottom:20px;}
+  .sd-main .body-text{font-size:14.5px;color:var(--text-grey);margin-bottom:26px;max-width:640px;}
+
+  .thumb-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:520px;margin-bottom:34px;}
+  .thumb-row img{width:100%;height:90px;object-fit:cover;border-radius:2px;}
+
+  .check-list{margin-bottom:34px;}
+  .check-list li{display:flex;align-items:flex-start;gap:14px;margin-bottom:14px;font-size:14.5px;color:var(--text-grey);}
+  .check-list .paw{flex:0 0 22px;width:22px;height:22px;border-radius:50%;background:var(--light-grey);color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:12px;margin-top:2px;}
+
+  /* accordion (shared style with FAQ) */
+  .accordion{margin-top:56px;}
+  .acc-item{display:flex;gap:22px;position:relative;padding-bottom:34px;}
+  .acc-item .line{position:absolute;left:19px;top:44px;bottom:0;width:2px;background:#f0c3d5;}
+  .acc-item:last-child .line{display:none;}
+  .acc-marker{flex:0 0 40px;width:40px;height:40px;border-radius:50%;background:var(--pink);color:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;z-index:1;}
+  .acc-body h3{font-size:17px;color:var(--blue);font-weight:700;margin-bottom:12px;border-bottom:1px solid var(--border-grey);padding-bottom:16px;}
+  .acc-body p{font-size:14px;color:var(--text-grey);max-width:560px;}
+  .acc-item.collapsed .acc-body p{display:none;}
+  .acc-item.collapsed .acc-body h3{margin-bottom:0;}
+
+  .back-link{display:inline-block;margin-top:50px;padding-top:14px;border-top:1px solid var(--border-grey);font-size:13px;font-weight:700;color:var(--blue);letter-spacing:.2px;}
+
+  /* sidebar */
+  .sidebar-box{background:var(--light-grey);padding:34px 30px 44px;text-align:center;position:relative;overflow:hidden;}
+  .sidebar-box h3{font-size:19px;font-weight:700;color:var(--navy);margin-bottom:12px;}
+  .sidebar-box .rule{width:34px;height:2px;background:var(--pink);margin:0 auto 22px;}
+  .sidebar-list{position:relative;z-index:1;}
+  .sidebar-list li{background:#fff;padding:16px 20px;margin-bottom:10px;font-size:14.5px;font-weight:600;color:var(--navy);text-align:left;box-shadow:0 2px 6px rgba(0,0,0,.04);}
+  .sidebar-list li.active{color:var(--navy);}
+  .paw-decor{position:absolute;bottom:10px;right:10px;opacity:.15;font-size:60px;color:var(--text-grey);z-index:0;line-height:0;}
+
+  .btn{display:inline-block;padding:14px 32px;font-weight:700;font-size:13px;letter-spacing:.5px;border:none;cursor:pointer;border-radius:26px;}
+  .btn-blue{background:var(--blue);color:#fff;}
+
+  /* ===== NEWSLETTER ===== */
+  .newsletter{position:relative;padding:70px 0;overflow:hidden;background:#b3665a;}
+  .newsletter img.bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.55;}
+  .newsletter .overlay{position:absolute;inset:0;background:linear-gradient(90deg, rgba(60,30,25,.55) 0%, rgba(60,30,25,.15) 60%);}
+  .newsletter .container{position:relative;color:#fff;}
+  .newsletter h2{font-size:28px;font-weight:700;margin-bottom:10px;}
+  .newsletter p{font-size:14px;opacity:.95;margin-bottom:26px;}
+  .subscribe-form{display:flex;max-width:480px;}
+  .subscribe-form input{flex:1;border:none;padding:0 18px;font-size:14px;font-family:'Open Sans';}
+  .subscribe-form button{background:var(--pink);color:#fff;border:none;padding:0 30px;font-weight:700;font-size:13px;letter-spacing:.4px;cursor:pointer;}
+
+  /* ===== FOOTER ===== */
+  footer{background:var(--footer-grey);padding:80px 0 40px;}
+  .footer-grid{display:grid;grid-template-columns:1.3fr 1fr 1fr 1fr;gap:40px;}
+  .footer-brand .brand{margin-bottom:20px;}
+  .footer-social{display:flex;gap:14px;margin-top:6px;}
+  .footer-social a{width:32px;height:32px;border-radius:50%;background:#dfe2e7;display:flex;align-items:center;justify-content:center;color:var(--navy);font-size:14px;}
+  .footer-col h4{font-size:17px;color:var(--navy);font-weight:700;margin-bottom:18px;}
+  .footer-col .rule{width:34px;height:2px;background:var(--pink);margin-bottom:18px;}
+  .footer-col p{font-size:13.5px;color:var(--text-grey);margin-bottom:6px;}
+  .footer-col ul li{font-size:13.5px;color:var(--text-grey);margin-bottom:12px;display:flex;gap:10px;align-items:flex-start;}
+  .footer-col ul li a{color:var(--blue);}
+  .footer-col .icon-sq{color:var(--pink);width:14px;}
+
+  .bottom-bar{background:var(--dark-bar);color:#9aa1ad;text-align:center;padding:20px 0;font-size:13px;}
+  .bottom-bar a{color:#fff;font-weight:600;}
+
+  @media(max-width:900px){
+    .service-detail .container{grid-template-columns:1fr;}
+    .footer-grid{grid-template-columns:1fr 1fr;}
+    .nav ul{display:none;}
+    .hero-content h1{font-size:38px;}
+    .thumb-row{grid-template-columns:repeat(3,1fr);max-width:100%;}
+  }
+</style>
+</head>
+<body>
+
+  <!-- ===== TOP BAR ===== -->
+  <div class="topbar">
+    <div class="container">
+      <div class="topbar-left">
+        <span>📍 Pet Street 123 – New York</span>
+        <span>✉ email@yoursite.com</span>
+        <span>📞 (123) 456-789</span>
+      </div>
+      <div class="topbar-social">
+        <a href="#">f</a>
+        <a href="#">t</a>
+        <a href="#">◎</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== HEADER / NAV ===== -->
+  <header class="main">
+    <div class="container">
+      <div class="brand">
+        <div class="paw-icon">🐾</div>
+        <div class="brand-text">
+          <span class="b1">UNITED</span>
+          <span class="b2">PETS</span>
+        </div>
+      </div>
+      <nav class="nav">
+        <ul>
+          <li><a href="#">Home <span class="caret">▾</span></a></li>
+          <li class="active"><a href="#">Services <span class="caret">▾</span></a></li>
+          <li><a href="#">About <span class="caret">▾</span></a></li>
+          <li><a href="#">Adopt <span class="caret">▾</span></a></li>
+          <li><a href="#">Gallery <span class="caret">▾</span></a></li>
+          <li><a href="#">Contact <span class="caret">▾</span></a></li>
+          <li><a href="#">Other Pages <span class="caret">▾</span></a></li>
+          <li><a href="#">Shop</a></li>
+        </ul>
+        <a href="#" class="cart-icon">🛒</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ===== HERO ===== -->
+  <section class="hero">
+    <img src="https://loremflickr.com/1600/700/goldenretriever,cat" alt="Dog and cat">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <div class="container">
+        <h1>Grooming</h1>
+        <span class="breadcrumb-pill">United Pets &nbsp;›&nbsp; Service &nbsp;›&nbsp; Grooming</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== SERVICE DETAIL ===== -->
+  <section class="service-detail">
+    <div class="container">
+
+      <!-- main -->
+      <div class="sd-main">
+        <h2>Pet grooming</h2>
+        <p class="lead">Our basic grooming package includes shampoo, blow-dry, ear cleaning &amp; nail trim.</p>
+        <p class="body-text">Etiam rhoncus leo a dolor placerat, nec elementum ipsum convall Maecenas at arcu risus scelerisque laoree. Aliquam erat volutpat In id fermentum augue, ut pellentesque leo. Maecenas at arcu risus. Donec commodo sodales ex, scelerisque</p>
+
+        <div class="thumb-row">
+          <img src="https://loremflickr.com/300/200/catbath,paws" alt="Cat paw trim">
+          <img src="https://loremflickr.com/300/200/dogbath,soap" alt="Dog bath">
+          <img src="https://loremflickr.com/300/200/blackcat,brushing" alt="Cat brushing">
+        </div>
+
+        <ul class="check-list">
+          <li><span class="paw">🐾</span> Phas ell lorem</li>
+          <li><span class="paw">🐾</span> Aliquam erat volut pat phas ellu</li>
+          <li><span class="paw">🐾</span> Ipuset phas ellus ac sodales Lorem ipsor dolor</li>
+          <li><span class="paw">🐾</span> Ipuset phas ellus ac sodales Lorem ipsor dolor<br>Phas ell lorem</li>
+          <li><span class="paw">🐾</span> Aliquam erat volut pat phas ellu</li>
+        </ul>
+
+        <a href="#" class="btn btn-blue">CONTACT US</a>
+
+        <div class="accordion">
+          <div class="acc-item">
+            <div class="line"></div>
+            <div class="acc-marker">−</div>
+            <div class="acc-body">
+              <h3>Grooming package upgrades</h3>
+              <p>Donec commodo sodales ex, scelerisque laoreet nibh hendrerit id. In aliquet magna nec lobortis maximus. Etiam rhoncus leo a dolor placerat, nec elementum ipsum convall.</p>
+            </div>
+          </div>
+          <div class="acc-item collapsed">
+            <div class="line"></div>
+            <div class="acc-marker">+</div>
+            <div class="acc-body">
+              <h3>Bath &amp; Grooming details</h3>
+              <p>Donec commodo sodales ex, scelerisque laoreet nibh hendrerit id.</p>
+            </div>
+          </div>
+          <div class="acc-item collapsed">
+            <div class="acc-marker">+</div>
+            <div class="acc-body">
+              <h3>Nail Trimming &amp; Ear cleaning</h3>
+              <p>Donec commodo sodales ex, scelerisque laoreet nibh hendrerit id.</p>
+            </div>
+          </div>
+        </div>
+
+        <a href="#" class="back-link">« Go back to service</a>
+      </div>
+
+      <!-- sidebar -->
+      <div>
+        <div class="sidebar-box">
+          <h3>All Services</h3>
+          <div class="rule"></div>
+          <ul class="sidebar-list">
+            <li class="active">Veterinarian</li>
+            <li>Grooming</li>
+            <li>Adoption</li>
+          </ul>
+          <div class="paw-decor">🐾</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===== NEWSLETTER ===== -->
+  <section class="newsletter">
+    <img class="bg" src="https://loremflickr.com/1600/500/dogtreats,leash" alt="Dog treats and leash">
+    <div class="overlay"></div>
+    <div class="container">
+      <h2>Subscribe to our newsletter</h2>
+      <p>We send e-mails once a month, we never send Spam!</p>
+      <form class="subscribe-form">
+        <input type="email" placeholder="Your email here">
+        <button type="submit">SUBSCRIBE</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="brand">
+            <div class="paw-icon">🐾</div>
+            <div class="brand-text">
+              <span class="b1">UNITED</span>
+              <span class="b2">PETS</span>
+            </div>
+          </div>
+          <div class="footer-social">
+            <a href="#">f</a>
+            <a href="#">t</a>
+            <a href="#">◎</a>
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <h4>About us</h4>
+          <div class="rule"></div>
+          <p>Elit aenean, amet eros curabitur.</p>
+          <p>Wisi ad eget ipsum metus sociis</p>
+          <p>Cras vel wisi elit aenean.</p>
+        </div>
+
+        <div class="footer-col">
+          <h4>Contact Us</h4>
+          <div class="rule"></div>
+          <ul>
+            <li><span class="icon-sq">📞</span> (123) 456-789</li>
+            <li><span class="icon-sq">✉</span> <a href="#">email@yoursite.com</a></li>
+            <li><span class="icon-sq">📍</span> Pet Street 123 – New York</li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Working Hours</h4>
+          <div class="rule"></div>
+          <p>Open from 9am – 6pm</p>
+          <p>Holidays – Closed</p>
+          <p>Weekends – Closed</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <div class="bottom-bar">
+    © 2026 Unitedpets Store. All Rights Reserved. Designed by <a href="#">BoostifyThemes</a>.
+  </div>
+
+</body>
+</html>

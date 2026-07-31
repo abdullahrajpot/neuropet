@@ -10,11 +10,11 @@ import {
 import { siteConfig } from "@/lib/site-config";
 
 export const metadata: Metadata = {
-  title: "Training & Behaviour Services",
-  description: `Expert pet training and behavioural consultation for dogs, cats, and puppies — force-free care from ${siteConfig.name}.`,
+  title: "Our Services",
+  description: `Explore expert pet training and behavioural consultation services from ${siteConfig.name}.`,
 };
 
-export default function TrainingBehaviourPage() {
+export default function ServicesPage() {
   return (
     <>
       <ServicesHero />

@@ -21,6 +21,12 @@
     outline: 2px solid #2f6b5e;
     outline-offset: 2px;
   }
+
+  /* Services page — expose Poppins & Open Sans via CSS vars */
+  :root {
+    --poppins: var(--font-poppins, 'Poppins', sans-serif);
+    --open-sans: var(--font-open-sans, 'Open Sans', sans-serif);
+  }
 }
 
 @layer utilities {
@@ -29,5 +35,20 @@
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
+  }
+
+  /* Utility classes for the services page design */
+  .font-poppins {
+    font-family: var(--font-poppins, 'Poppins', sans-serif);
+  }
+  .font-open-sans {
+    font-family: var(--font-open-sans, 'Open Sans', sans-serif);
+  }
+
+  /* Responsive overrides for services page */
+  @media (max-width: 1023px) {
+    .max-lg\:grid-cols-1 {
+      grid-template-columns: 1fr !important;
+    }
   }
 }

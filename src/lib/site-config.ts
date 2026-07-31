@@ -23,13 +23,14 @@ export const navLinks = [
   { label: "Home", href: "/" },
   { label: "About", href: "/about" },
   {
-    label: "Training & Behaviour",
-    href: "/training-behaviour",
+    label: "Services",
+    href: "/services",
     children: [
+      { label: "Overview of All Services", href: "/services" },
       { label: "Dog Behavioural Consultation", href: "/training-behaviour/dog-behaviour" },
       { label: "Cat Behavioural Consultation", href: "/training-behaviour/cat-behaviour" },
-      { label: "Puppy Training", href: "/training-behaviour/puppy-training" },
-      { label: "Virtual/Online Consultation", href: "/training-behaviour/virtual-consultation" },
+      { label: "Puppy Training & Socialisation", href: "/training-behaviour/puppy-training" },
+      { label: "Virtual / Online Consultation", href: "/training-behaviour/virtual-consultation" },
       { label: "Pet Behaviour Expert Witness", href: "/training-behaviour/expert-witness" },
     ],
   },

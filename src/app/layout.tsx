@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Fraunces, Inter, Nunito_Sans } from "next/font/google";
+import { Fraunces, Inter, Nunito_Sans, Poppins, Open_Sans } from "next/font/google";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { CookieBanner } from "@/components/layout/CookieBanner";
@@ -25,6 +25,20 @@ const nunito = Nunito_Sans({
   display: "swap",
 });
 
+const poppins = Poppins({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
+  variable: "--font-poppins",
+  display: "swap",
+});
+
+const openSans = Open_Sans({
+  subsets: ["latin"],
+  weight: ["400", "600", "700"],
+  variable: "--font-open-sans",
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   title: {
     default: `${siteConfig.name} | Pet Behaviour Consultation`,
@@ -41,7 +55,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${fraunces.variable} ${inter.variable} ${nunito.variable}`}
+      className={`${fraunces.variable} ${inter.variable} ${nunito.variable} ${poppins.variable} ${openSans.variable}`}
     >
       <body className="min-h-screen flex flex-col">
         <Navbar />
