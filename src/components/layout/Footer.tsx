@@ -1,150 +1,291 @@
-import Link from "next/link";
-import {
-  Facebook,
-  Instagram,
-  Linkedin,
-  PawPrint,
-  Twitter,
-} from "lucide-react";
-import { Container } from "@/components/ui/shared";
-import {
-  footerExplore,
-  footerMedia,
-  footerTraining,
-  siteConfig,
-} from "@/lib/site-config";
+"use client";
 
-const socialIcons = [
-  { icon: Facebook, href: siteConfig.social.facebook, label: "Facebook" },
-  { icon: Instagram, href: siteConfig.social.instagram, label: "Instagram" },
-  { icon: Twitter, href: siteConfig.social.twitter, label: "Twitter" },
-  { icon: Linkedin, href: siteConfig.social.linkedin, label: "LinkedIn" },
+import { useState } from "react";
+import Link from "next/link";
+import { MapPin, Mail, Phone, PawPrint } from "lucide-react";
+import { Container } from "@/components/ui/shared";
+import { siteConfig } from "@/lib/site-config";
+
+/* ── column data ── */
+const otherPages = [
+  { label: "Home",             href: "/" },
+  { label: "About Us",         href: "/about" },
+  { label: "Services",         href: "/services" },
+  { label: "Contact",          href: "/contact" },
+  { label: "Events",           href: "/events" },
+  { label: "Media & Speaking", href: "/media-speaking" },
 ];
 
+const quickLinks = [
+  { label: "Privacy Policy",   href: "/privacy-policy" },
+  { label: "Terms of Service", href: "/terms" },
+  { label: "Blog",             href: "/blog" },
+  { label: "Book a Consultation", href: "/book" },
+  { label: "Pet Profile",      href: "/pet-profile" },
+];
+
+const socialLinks = [
+  { label: "Facebook",  href: siteConfig.social.facebook,  letter: "f" },
+  { label: "Twitter",   href: siteConfig.social.twitter,   letter: "t" },
+  { label: "Instagram", href: siteConfig.social.instagram, letter: "◎" },
+  { label: "LinkedIn",  href: siteConfig.social.linkedin,  letter: "in" },
+];
+
+/* ── shared arrow bullet ── */
+function Arrow() {
+  return (
+    <span style={{
+      color: "#D97540",          /* accent-600 terracotta */
+      fontWeight: 700,
+      fontSize: "11px",
+      flexShrink: 0,
+      marginTop: "1px",
+    }}>›</span>
+  );
+}
+
+/* ── column heading ── */
+function ColHead({ children }: { children: React.ReactNode }) {
+  return (
+    <h4 style={{
+      fontFamily: "var(--font-poppins, 'Poppins', sans-serif)",
+      fontSize: "17px",
+      fontWeight: 700,
+      color: "#fff",
+      marginBottom: "22px",
+    }}>{children}</h4>
+  );
+}
+
+/* ════════════════════════════════════════
+   FOOTER
+════════════════════════════════════════ */
 export function Footer() {
+  const [email, setEmail] = useState("");
+  const [done, setDone]   = useState(false);
   const year = new Date().getFullYear();
 
   return (
-    <footer className="bg-primary-900 text-white">
-      <Container className="py-16 md:py-20">
-        <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-4">
-          <div className="space-y-4">
-            <div className="flex items-center gap-2">
-              <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10">
-                <PawPrint className="h-5 w-5" strokeWidth={1.5} />
+    <footer style={{ background: "#1E4A40" /* primary-900 */ }}>
+
+      {/* ── MAIN GRID ── */}
+      <Container>
+        <div style={{
+          display: "grid",
+          gridTemplateColumns: "1.5fr 1fr 1fr 1.4fr",
+          gap: "48px",
+          padding: "72px 0 56px",
+        }}
+          className="max-lg:grid-cols-2 max-md:grid-cols-1"
+        >
+
+          {/* ── COL 1: Brand + contact ── */}
+          <div>
+            {/* Logo */}
+            <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "16px" }}>
+              <span style={{
+                width: "40px", height: "40px", borderRadius: "50%",
+                background: "rgba(255,255,255,0.12)",
+                display: "flex", alignItems: "center", justifyContent: "center",
+              }}>
+                <PawPrint style={{ width: "20px", height: "20px", color: "#D97540", strokeWidth: 1.5 }} />
               </span>
-              <span className="font-display text-xl">{siteConfig.name}</span>
+              <span style={{
+                fontFamily: "var(--font-fraunces, 'Fraunces', Georgia, serif)",
+                fontSize: "22px",
+                fontWeight: 700,
+                color: "#fff",
+              }}>{siteConfig.name}</span>
             </div>
-            <p className="max-w-xs text-sm leading-relaxed text-white/75">
-              {siteConfig.tagline}
-            </p>
-            <div className="flex gap-3">
-              {socialIcons.map(({ icon: Icon, href, label }) => (
+
+            {/* Tagline */}
+            <p style={{
+              fontFamily: "var(--font-open-sans, 'Open Sans', sans-serif)",
+              fontSize: "14px",
+              color: "rgba(255,255,255,0.70)",
+              lineHeight: 1.7,
+              marginBottom: "24px",
+              maxWidth: "280px",
+            }}>{siteConfig.tagline}</p>
+
+            {/* Contact details */}
+            {[
+              { Icon: MapPin, text: siteConfig.address },
+              { Icon: Mail,   text: siteConfig.email },
+              { Icon: Phone,  text: siteConfig.phone },
+            ].map(({ Icon, text }) => (
+              <div key={text} style={{
+                display: "flex", alignItems: "flex-start", gap: "10px",
+                marginBottom: "12px",
+                fontFamily: "var(--font-open-sans, 'Open Sans', sans-serif)",
+                fontSize: "13.5px",
+                color: "rgba(255,255,255,0.72)",
+              }}>
+                <Icon style={{ width: "15px", height: "15px", color: "#D97540", flexShrink: 0, marginTop: "2px" }} strokeWidth={1.75} />
+                {text}
+              </div>
+            ))}
+          </div>
+
+          {/* ── COL 2: Other Pages ── */}
+          <div>
+            <ColHead>Other Pages</ColHead>
+            <ul style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+              {otherPages.map((l) => (
+                <li key={l.href} style={{ display: "flex", alignItems: "flex-start", gap: "8px" }}>
+                  <Arrow />
+                  <Link href={l.href} style={{
+                    fontFamily: "var(--font-open-sans, 'Open Sans', sans-serif)",
+                    fontSize: "14px",
+                    color: "rgba(255,255,255,0.80)",
+                    textDecoration: "none",
+                    transition: "color .18s",
+                  }}
+                    onMouseEnter={(e) => ((e.target as HTMLElement).style.color = "#D97540")}
+                    onMouseLeave={(e) => ((e.target as HTMLElement).style.color = "rgba(255,255,255,0.80)")}
+                  >{l.label}</Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* ── COL 3: Quick Links ── */}
+          <div>
+            <ColHead>Quick Links</ColHead>
+            <ul style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+              {quickLinks.map((l) => (
+                <li key={l.href} style={{ display: "flex", alignItems: "flex-start", gap: "8px" }}>
+                  <Arrow />
+                  <Link href={l.href} style={{
+                    fontFamily: "var(--font-open-sans, 'Open Sans', sans-serif)",
+                    fontSize: "14px",
+                    color: "rgba(255,255,255,0.80)",
+                    textDecoration: "none",
+                    transition: "color .18s",
+                  }}
+                    onMouseEnter={(e) => ((e.target as HTMLElement).style.color = "#D97540")}
+                    onMouseLeave={(e) => ((e.target as HTMLElement).style.color = "rgba(255,255,255,0.80)")}
+                  >{l.label}</Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* ── COL 4: Newsletter + socials ── */}
+          <div>
+            <ColHead>Newsletter</ColHead>
+
+            {done ? (
+              <p style={{
+                fontFamily: "var(--font-open-sans, 'Open Sans', sans-serif)",
+                fontSize: "14px", color: "rgba(255,255,255,0.85)", marginBottom: "20px",
+              }}>✓ Thank you for subscribing!</p>
+            ) : (
+              <form
+                onSubmit={(e) => { e.preventDefault(); if (email) setDone(true); }}
+                style={{ display: "flex", marginBottom: "14px" }}
+              >
+                <input
+                  type="email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Your Email Address"
+                  style={{
+                    flex: 1,
+                    height: "48px",
+                    border: "none",
+                    padding: "0 16px",
+                    fontSize: "13.5px",
+                    fontFamily: "var(--font-open-sans, 'Open Sans', sans-serif)",
+                    outline: "none",
+                    background: "#fff",
+                    color: "#2A2A2A",
+                    borderRadius: "4px 0 0 4px",
+                  }}
+                />
+                <button type="submit" style={{
+                  height: "48px",
+                  padding: "0 20px",
+                  background: "#D97540",
+                  color: "#fff",
+                  border: "none",
+                  cursor: "pointer",
+                  fontFamily: "var(--font-poppins, 'Poppins', sans-serif)",
+                  fontWeight: 700,
+                  fontSize: "13px",
+                  letterSpacing: ".3px",
+                  borderRadius: "0 4px 4px 0",
+                  transition: "background .2s",
+                  whiteSpace: "nowrap",
+                }}>Subscribe</button>
+              </form>
+            )}
+
+            <p style={{
+              fontFamily: "var(--font-open-sans, 'Open Sans', sans-serif)",
+              fontSize: "13px",
+              color: "rgba(255,255,255,0.60)",
+              marginBottom: "20px",
+            }}>Get the latest news &amp; updates</p>
+
+            {/* Social icon circles */}
+            <div style={{ display: "flex", gap: "10px" }}>
+              {socialLinks.map(({ label, href, letter }) => (
                 <a
                   key={label}
                   href={href}
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={label}
-                  className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 transition-colors hover:bg-accent-600"
-                >
-                  <Icon className="h-4 w-4" strokeWidth={1.5} />
-                </a>
+                  style={{
+                    width: "38px", height: "38px", borderRadius: "50%",
+                    background: "#D97540",
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    color: "#fff",
+                    fontFamily: "var(--font-poppins, 'Poppins', sans-serif)",
+                    fontWeight: 700, fontSize: "13px",
+                    textDecoration: "none",
+                    transition: "background .2s",
+                  }}
+                >{letter}</a>
               ))}
             </div>
           </div>
-
-          <div>
-            <h3 className="font-label mb-4 text-xs font-semibold uppercase tracking-[0.08em] text-white/60">
-              Explore
-            </h3>
-            <ul className="space-y-3">
-              {footerExplore.map((link) => (
-                <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className="text-sm text-white/85 transition-colors hover:text-accent-400"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div>
-            <h3 className="font-label mb-4 text-xs font-semibold uppercase tracking-[0.08em] text-white/60">
-              Media & Events
-            </h3>
-            <ul className="space-y-3">
-              {footerMedia.map((link) => (
-                <li key={link.href + link.label}>
-                  <Link
-                    href={link.href}
-                    className="text-sm text-white/85 transition-colors hover:text-accent-400"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div>
-            <h3 className="font-label mb-4 text-xs font-semibold uppercase tracking-[0.08em] text-white/60">
-              Training & Behaviour
-            </h3>
-            <ul className="space-y-3">
-              {footerTraining.map((link) => (
-                <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className="text-sm text-white/85 transition-colors hover:text-accent-400"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-
-        <div className="mt-12 space-y-4 border-t border-white/15 pt-8 text-sm text-white/65">
-          <div className="flex flex-wrap gap-x-4 gap-y-2">
-            <Link href="/privacy-policy" className="hover:text-white">
-              Privacy Policy
-            </Link>
-            <span aria-hidden>·</span>
-            <Link href="/terms" className="hover:text-white">
-              Terms of Service
-            </Link>
-          </div>
-          <div className="flex flex-wrap gap-x-4 gap-y-2">
-            <span>Write a Review:</span>
-            <a
-              href={siteConfig.reviewLinks.google}
-              className="hover:text-white"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Google
-            </a>
-            <span aria-hidden>·</span>
-            <a
-              href={siteConfig.reviewLinks.facebook}
-              className="hover:text-white"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Facebook
-            </a>
-          </div>
-          <p>Office: {siteConfig.address}</p>
-          <p>
-            © {year} {siteConfig.name}. All Rights Reserved.
-          </p>
         </div>
       </Container>
+
+      {/* ── BOTTOM BAR ── */}
+      <div style={{
+        borderTop: "1px solid rgba(255,255,255,0.12)",
+        background: "#162F29",   /* slightly darker teal */
+      }}>
+        <Container>
+          <div style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            flexWrap: "wrap",
+            gap: "10px",
+            padding: "18px 0",
+          }}>
+            <p style={{
+              fontFamily: "var(--font-open-sans, 'Open Sans', sans-serif)",
+              fontSize: "13px",
+              color: "rgba(255,255,255,0.55)",
+            }}>
+              {siteConfig.name} — Expert Pet Behaviour Consultation
+            </p>
+            <p style={{
+              fontFamily: "var(--font-open-sans, 'Open Sans', sans-serif)",
+              fontSize: "13px",
+              color: "rgba(255,255,255,0.55)",
+            }}>
+              © {year} {siteConfig.name}. All Rights Reserved.
+            </p>
+          </div>
+        </Container>
+      </div>
     </footer>
   );
 }

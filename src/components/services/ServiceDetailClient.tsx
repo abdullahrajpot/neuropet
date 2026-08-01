@@ -266,7 +266,7 @@ export function ServiceDetailClient({
               whileInView="visible"
               viewport={{ once: true }}
             >
-              {/* h2 */}
+              {/* ── Title ── */}
               <h2
                 style={{
                   fontFamily: "var(--font-poppins, 'Poppins', sans-serif)",
@@ -274,16 +274,16 @@ export function ServiceDetailClient({
                   fontWeight: 700,
                   color: "#182b49",
                   marginBottom: "16px",
+                  lineHeight: 1.25,
                 }}
               >
                 {content.title}
               </h2>
 
-              {/* Lead paragraph */}
+              {/* ── Lead ── */}
               <p
                 style={{
-                  fontFamily:
-                    "var(--font-open-sans, 'Open Sans', sans-serif)",
+                  fontFamily: "var(--font-open-sans, 'Open Sans', sans-serif)",
                   fontSize: "16px",
                   color: "#7a8291",
                   marginBottom: "20px",
@@ -293,109 +293,127 @@ export function ServiceDetailClient({
                 {content.lead}
               </p>
 
-              {/* Body paragraph */}
+              {/* ── Body text ── */}
               <p
                 style={{
-                  fontFamily:
-                    "var(--font-open-sans, 'Open Sans', sans-serif)",
+                  fontFamily: "var(--font-open-sans, 'Open Sans', sans-serif)",
                   fontSize: "14.5px",
                   color: "#7a8291",
                   marginBottom: "26px",
-                  maxWidth: "640px",
                   lineHeight: 1.75,
                 }}
               >
                 {content.body}
               </p>
 
-              {/* 3 thumbnails */}
+              {/* ── THUMBNAIL + CHECKLIST ROW ──
+                  Left col: 3 thumbnail images
+                  Right col: paw checklist + CONTACT US button
+              ── */}
               <div
                 style={{
                   display: "grid",
-                  gridTemplateColumns: "repeat(3, 1fr)",
-                  gap: "12px",
-                  maxWidth: "520px",
-                  marginBottom: "34px",
+                  gridTemplateColumns: "1fr 1fr",
+                  gap: "30px",
+                  alignItems: "start",
+                  marginBottom: "0",
                 }}
               >
-                {content.thumbs.map((src, i) => (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    key={i}
-                    src={src}
-                    alt=""
+                {/* Left — 3 stacked thumbnails */}
+                <div>
+                  <div
                     style={{
-                      width: "100%",
-                      height: "90px",
-                      objectFit: "cover",
-                      borderRadius: "2px",
-                      display: "block",
-                    }}
-                  />
-                ))}
-              </div>
-
-              {/* Paw checklist */}
-              <ul style={{ marginBottom: "34px" }}>
-                {content.checklist.map((item) => (
-                  <li
-                    key={item}
-                    style={{
-                      display: "flex",
-                      alignItems: "flex-start",
-                      gap: "14px",
-                      marginBottom: "14px",
-                      fontFamily:
-                        "var(--font-open-sans, 'Open Sans', sans-serif)",
-                      fontSize: "14.5px",
-                      color: "#7a8291",
+                      display: "grid",
+                      gridTemplateColumns: "repeat(3, 1fr)",
+                      gap: "10px",
                     }}
                   >
-                    <span
-                      style={{
-                        flexShrink: 0,
-                        width: "22px",
-                        height: "22px",
-                        borderRadius: "50%",
-                        background: "#f4f5f7",
-                        color: "#1c58a9",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        fontSize: "11px",
-                        marginTop: "2px",
-                      }}
-                    >
-                      🐾
-                    </span>
-                    {item}
-                  </li>
-                ))}
-              </ul>
+                    {content.thumbs.map((src, i) => (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        key={i}
+                        src={src}
+                        alt=""
+                        style={{
+                          width: "100%",
+                          height: "90px",
+                          objectFit: "cover",
+                          borderRadius: "2px",
+                          display: "block",
+                        }}
+                      />
+                    ))}
+                  </div>
+                </div>
 
-              {/* Blue rounded button */}
-              <Link
-                href="/contact"
-                style={{
-                  display: "inline-block",
-                  background: "#1c58a9",
-                  color: "#fff",
-                  padding: "14px 32px",
-                  fontFamily: "var(--font-poppins, 'Poppins', sans-serif)",
-                  fontWeight: 700,
-                  fontSize: "13px",
-                  letterSpacing: ".5px",
-                  borderRadius: "26px",
-                  transition: "background .2s",
-                }}
-              >
-                CONTACT US
-              </Link>
+                {/* Right — checklist + button */}
+                <div>
+                  {/* Paw checklist */}
+                  <ul style={{ marginBottom: "26px" }}>
+                    {content.checklist.map((item) => (
+                      <li
+                        key={item}
+                        style={{
+                          display: "flex",
+                          alignItems: "flex-start",
+                          gap: "12px",
+                          marginBottom: "12px",
+                          fontFamily:
+                            "var(--font-open-sans, 'Open Sans', sans-serif)",
+                          fontSize: "14px",
+                          color: "#7a8291",
+                          lineHeight: 1.6,
+                        }}
+                      >
+                        {/* Blue circle paw badge — matches screenshot */}
+                        <span
+                          style={{
+                            flexShrink: 0,
+                            width: "22px",
+                            height: "22px",
+                            borderRadius: "50%",
+                            background: "#1c58a9",
+                            color: "#fff",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            fontSize: "9px",
+                            marginTop: "2px",
+                          }}
+                        >
+                          🐾
+                        </span>
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
 
-              {/* Accordion */}
+                  {/* Blue rounded CONTACT US button — directly below checklist */}
+                  <Link
+                    href="/contact"
+                    style={{
+                      display: "inline-block",
+                      background: "#1c58a9",
+                      color: "#fff",
+                      padding: "14px 36px",
+                      fontFamily:
+                        "var(--font-poppins, 'Poppins', sans-serif)",
+                      fontWeight: 700,
+                      fontSize: "13px",
+                      letterSpacing: ".5px",
+                      borderRadius: "26px",
+                      transition: "background .2s",
+                    }}
+                  >
+                    CONTACT US
+                  </Link>
+                </div>
+              </div>
+
+              {/* ── Accordion — full width below the row ── */}
               <ServiceAccordion items={content.accordion} />
 
-              {/* Back link */}
+              {/* ── Back link ── */}
               <Link
                 href="/services"
                 style={{
