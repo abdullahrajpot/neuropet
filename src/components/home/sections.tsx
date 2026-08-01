@@ -309,7 +309,7 @@ export function AboutTeaserSection() {
             viewport={{ once: true }}
           >
             <BlobImage
-              src="/images/gallery8.jpg"
+              src="/images/doc3.png"
               alt="Behaviour consultant with pet"
               className="aspect-[4/5] w-full"
             />
@@ -485,28 +485,132 @@ export function BlogPreviewSection() {
 
 export function CtaBanner() {
   return (
-    <section className="bg-primary-900 py-16 md:py-20">
-      <Container>
-        <motion.div
-          className="flex flex-col items-start justify-between gap-8 md:flex-row md:items-center"
-          variants={fadeUp}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-        >
-          <div className="max-w-xl">
-            <h2 className="font-display text-[32px] text-white md:text-[48px]">
-              Ready to help your pet <em className="not-italic text-accent-400">thrive</em>?
-            </h2>
-            <p className="mt-4 text-white/75">
-              Book a consultation today — in-person or virtual — and take the
-              first step toward a calmer home.
+    <section className="relative overflow-hidden py-20 md:py-28">
+      {/* Background image */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/images/servicepg3.jpg"
+        alt=""
+        aria-hidden="true"
+        className="absolute inset-0 h-full w-full object-cover object-center"
+      />
+
+      {/* Dark teal gradient overlay — heavier on left so text reads clearly */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-0"
+        style={{
+          background:
+            "linear-gradient(105deg, rgba(30,74,64,0.96) 0%, rgba(30,74,64,0.88) 45%, rgba(30,74,64,0.55) 100%)",
+        }}
+      />
+
+      {/* Paw watermark — faint, top-right */}
+      <div
+        aria-hidden="true"
+        className="absolute right-8 top-6 opacity-[0.07] pointer-events-none hidden lg:block"
+      >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/images/footprint.png" alt="" className="w-56 invert" />
+      </div>
+
+      {/* Decorative circle accent — bottom left */}
+      <div
+        aria-hidden="true"
+        className="absolute -bottom-16 -left-16 h-64 w-64 rounded-full border-[3px] border-accent-600/25 hidden lg:block"
+      />
+      <div
+        aria-hidden="true"
+        className="absolute -bottom-8 -left-8 h-40 w-40 rounded-full border-[2px] border-accent-400/20 hidden lg:block"
+      />
+
+      <Container className="relative z-10">
+        <div className="grid items-center gap-10 lg:grid-cols-12 lg:gap-16">
+
+          {/* Left — text */}
+          <motion.div
+            className="lg:col-span-7"
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+          >
+            {/* Eyebrow */}
+            <p className="font-label text-xs font-semibold uppercase tracking-[0.14em] text-accent-400 mb-4">
+              Take the first step
             </p>
-          </div>
-          <Button href="/book" className="shrink-0">
-            Book a Consultation
-          </Button>
-        </motion.div>
+
+            <h2 className="font-display text-[36px] leading-tight text-white md:text-[52px] lg:text-[58px]">
+              Ready to help your pet{" "}
+              <em className="not-italic text-accent-400">thrive</em>?
+            </h2>
+
+            <p className="mt-5 text-base leading-relaxed text-white/75 max-w-lg md:text-lg">
+              Book a consultation today — in-person or virtual — and take the
+              first step toward a calmer, happier home for you and your pet.
+            </p>
+
+            {/* Trust chips */}
+            <div className="mt-6 flex flex-wrap gap-3">
+              {[
+                "Force-free methods",
+                "In-person & virtual",
+                "Written behaviour plan",
+              ].map((chip) => (
+                <span
+                  key={chip}
+                  className="rounded-full border border-white/25 px-4 py-1.5 text-xs font-semibold text-white/80"
+                >
+                  {chip}
+                </span>
+              ))}
+            </div>
+          </motion.div>
+
+          {/* Right — CTA card */}
+          <motion.div
+            className="lg:col-span-5"
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+          >
+            <div
+              className="rounded-3xl p-8 md:p-10"
+              style={{ background: "rgba(255,255,255,0.07)", backdropFilter: "blur(12px)", border: "1px solid rgba(255,255,255,0.14)" }}
+            >
+              <p className="font-display text-2xl text-white mb-2">
+                Book a consultation
+              </p>
+              <p className="text-sm text-white/65 mb-6 leading-relaxed">
+                First sessions run 60–75 minutes. We&apos;ll build a plan
+                tailored to your pet — not a script.
+              </p>
+
+              {/* Stats row */}
+              <div className="grid grid-cols-3 gap-4 mb-8 border-t border-white/15 pt-6">
+                {[
+                  { value: "500+", label: "Pets helped" },
+                  { value: "35+", label: "Yrs experience" },
+                  { value: "98%", label: "Satisfaction" },
+                ].map((s) => (
+                  <div key={s.label} className="text-center">
+                    <p className="font-display text-2xl text-accent-400">{s.value}</p>
+                    <p className="text-[11px] text-white/55 mt-0.5 leading-tight">{s.label}</p>
+                  </div>
+                ))}
+              </div>
+
+              <Button href="/book" className="w-full justify-center text-sm">
+                Book a Consultation →
+              </Button>
+              <p className="mt-3 text-center text-[11px] text-white/40">
+                No commitment — cancel or reschedule anytime
+              </p>
+            </div>
+          </motion.div>
+
+        </div>
       </Container>
     </section>
   );
