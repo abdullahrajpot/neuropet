@@ -22,7 +22,7 @@ export default function AboutPage() {
       <AboutMission />
       <AboutHighlightCards />
       <AboutParallaxBanner />
-      <AboutPartners />
+      {/* <AboutPartners /> */}
       <AboutWhyChoose />
       <AboutTeam />
     </>

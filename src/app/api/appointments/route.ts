@@ -1,13 +1,27 @@
 import { NextResponse } from "next/server";
+import { nanoid } from "nanoid";
 import { connectDB } from "@/lib/mongodb";
 import { Appointment } from "@/models/Appointment";
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
+    
+    // Generate unique client ID
+    const clientId = nanoid(10).toUpperCase();
+    
     await connectDB();
-    const appointment = await Appointment.create(body);
-    return NextResponse.json({ id: appointment._id }, { status: 201 });
+    const appointment = await Appointment.create({
+      ...body,
+      clientId,
+      status: "pending",
+    });
+    
+    return NextResponse.json({ 
+      id: appointment._id,
+      clientId: clientId,
+      message: "Assessment submitted successfully"
+    }, { status: 201 });
   } catch (error) {
     console.error("Appointment error:", error);
     return NextResponse.json(

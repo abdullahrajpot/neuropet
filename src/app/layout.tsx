@@ -58,10 +58,7 @@ export default function RootLayout({
       className={`${fraunces.variable} ${inter.variable} ${nunito.variable} ${poppins.variable} ${openSans.variable}`}
     >
       <body className="min-h-screen flex flex-col">
-        <Navbar />
-        <main className="flex-1">{children}</main>
-        <Footer />
-        <CookieBanner />
+        {children}
       </body>
     </html>
   );
