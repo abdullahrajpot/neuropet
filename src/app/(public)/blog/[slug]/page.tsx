@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { Container } from "@/components/ui/shared";
 import { blogPosts } from "@/lib/site-config";
-import { BlogSidebar } from "@/app/blog/page";
+import { BlogSidebar } from "@/app/(public)/blog/page";
 import { ServicesNewsletter } from "@/components/services/sections";
 
 /* ─────────────────────────────────────────────

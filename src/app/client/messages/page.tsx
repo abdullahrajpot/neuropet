@@ -3,9 +3,7 @@
 import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { ChevronLeft, Send, User } from "lucide-react";
-import { Container } from "@/components/ui/shared";
-import { motion } from "framer-motion";
+import { Send, User } from "lucide-react";
 
 interface Message {
   _id: string;
@@ -101,122 +99,102 @@ export default function ClientMessagesPage() {
 
   if (loading) {
     return (
-      <section className="min-h-screen bg-cream pt-24 pb-16">
-        <Container>
-          <div className="text-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-4 border-primary-700 border-t-transparent mx-auto"></div>
-            <p className="mt-4 text-ink-600">Loading messages...</p>
-          </div>
-        </Container>
-      </section>
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-4 border-primary-700 border-t-transparent mx-auto"></div>
+          <p className="mt-4 text-ink-600">Loading messages...</p>
+        </div>
+      </div>
     );
   }
 
   return (
-    <section className="min-h-screen bg-cream pt-24 pb-16">
-      <Container>
-        <div className="mb-6">
-          <Link
-            href="/client/dashboard"
-            className="inline-flex items-center gap-2 text-sm text-primary-700 hover:text-accent-600"
-          >
-            <ChevronLeft className="w-4 h-4" />
-            Back to Dashboard
-          </Link>
-        </div>
+    <div className="space-y-6">
+      {/* Header */}
+      <div>
+        <h1 className="font-display text-3xl text-primary-900 mb-2">Messages</h1>
+        <p className="text-ink-600">Communicate with your behaviourist</p>
+      </div>
 
-        <div className="bg-white rounded-3xl shadow-xl overflow-hidden" style={{ height: "calc(100vh - 240px)", minHeight: "500px" }}>
-          {/* Header */}
-          <div className="bg-primary-700 text-white p-6">
-            <h1 className="font-display text-2xl mb-1">Messages</h1>
-            <p className="text-primary-200 text-sm">
-              Communicate with your behaviourist
-            </p>
-          </div>
-
-          {/* Messages Area */}
-          <div className="flex flex-col h-full">
-            <div className="flex-1 overflow-y-auto p-6 space-y-4" style={{ maxHeight: "calc(100% - 180px)" }}>
-              {messages.length === 0 ? (
-                <div className="text-center py-12">
-                  <p className="text-ink-600">No messages yet. Start the conversation!</p>
-                </div>
-              ) : (
-                messages.map((msg, index) => (
-                  <motion.div
-                    key={msg._id}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.05 }}
-                    className={`flex ${msg.sender === "client" ? "justify-end" : "justify-start"}`}
-                  >
-                    <div className={`flex gap-3 max-w-[70%] ${msg.sender === "client" ? "flex-row-reverse" : ""}`}>
-                      <div className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center ${
-                        msg.sender === "admin" 
-                          ? "bg-primary-700 text-white" 
-                          : "bg-accent-600 text-white"
-                      }`}>
-                        <User className="w-5 h-5" />
-                      </div>
-                      <div>
-                        <div className={`rounded-2xl px-5 py-3 ${
-                          msg.sender === "client"
-                            ? "bg-primary-700 text-white rounded-br-sm"
-                            : "bg-primary-100 text-primary-900 rounded-bl-sm"
-                        }`}>
-                          <p className="text-xs font-semibold mb-1 opacity-75">
-                            {msg.senderName}
-                          </p>
-                          <p className="text-sm leading-relaxed whitespace-pre-wrap">
-                            {msg.message}
-                          </p>
-                        </div>
-                        <p className="text-xs text-ink-500 mt-1 px-2">
-                          {new Date(msg.createdAt).toLocaleString("en-GB", {
-                            day: "numeric",
-                            month: "short",
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          })}
-                        </p>
-                      </div>
+      {/* Messages Container */}
+      <div className="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col" style={{ height: "calc(100vh - 280px)", minHeight: "500px" }}>
+        {/* Messages Area */}
+        <div className="flex-1 overflow-y-auto p-6 space-y-4">
+          {messages.length === 0 ? (
+            <div className="text-center py-12">
+              <p className="text-ink-600">No messages yet. Start the conversation!</p>
+            </div>
+          ) : (
+            messages.map((msg) => (
+              <div
+                key={msg._id}
+                className={`flex ${msg.sender === "client" ? "justify-end" : "justify-start"}`}
+              >
+                <div className={`flex gap-3 max-w-[70%] ${msg.sender === "client" ? "flex-row-reverse" : ""}`}>
+                  <div className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center ${
+                    msg.sender === "admin" 
+                      ? "bg-primary-700 text-white" 
+                      : "bg-accent-600 text-white"
+                  }`}>
+                    <User className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <div className={`rounded-2xl px-5 py-3 ${
+                      msg.sender === "client"
+                        ? "bg-primary-700 text-white rounded-br-sm"
+                        : "bg-cream text-primary-900 rounded-bl-sm"
+                    }`}>
+                      <p className="text-xs font-semibold mb-1 opacity-75">
+                        {msg.senderName}
+                      </p>
+                      <p className="text-sm leading-relaxed whitespace-pre-wrap">
+                        {msg.message}
+                      </p>
                     </div>
-                  </motion.div>
-                ))
-              )}
-              <div ref={messagesEndRef} />
-            </div>
-
-            {/* Input Area */}
-            <div className="border-t border-primary-100 p-4">
-              <form onSubmit={handleSend} className="flex gap-3">
-                <textarea
-                  value={newMessage}
-                  onChange={(e) => setNewMessage(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" && !e.shiftKey) {
-                      e.preventDefault();
-                      handleSend(e);
-                    }
-                  }}
-                  placeholder="Type your message... (Press Enter to send, Shift+Enter for new line)"
-                  className="flex-1 px-4 py-3 rounded-2xl border-2 border-primary-200 focus:border-primary-700 focus:ring-2 focus:ring-primary-700/20 outline-none transition-all resize-none"
-                  rows={2}
-                  disabled={sending}
-                />
-                <button
-                  type="submit"
-                  disabled={sending || !newMessage.trim()}
-                  className="px-6 py-3 rounded-2xl bg-primary-700 text-white font-semibold hover:bg-primary-800 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
-                >
-                  <Send className="w-4 h-4" />
-                  {sending ? "Sending..." : "Send"}
-                </button>
-              </form>
-            </div>
-          </div>
+                    <p className="text-xs text-ink-500 mt-1 px-2">
+                      {new Date(msg.createdAt).toLocaleString("en-GB", {
+                        day: "numeric",
+                        month: "short",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ))
+          )}
+          <div ref={messagesEndRef} />
         </div>
-      </Container>
-    </section>
+
+        {/* Input Area */}
+        <div className="border-t border-primary-100 p-4 bg-cream/50">
+          <form onSubmit={handleSend} className="flex gap-3">
+            <textarea
+              value={newMessage}
+              onChange={(e) => setNewMessage(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault();
+                  handleSend(e);
+                }
+              }}
+              placeholder="Type your message... (Press Enter to send, Shift+Enter for new line)"
+              className="flex-1 px-4 py-3 rounded-2xl border-2 border-primary-200 focus:border-primary-700 focus:ring-2 focus:ring-primary-700/20 outline-none transition-all resize-none bg-white"
+              rows={2}
+              disabled={sending}
+            />
+            <button
+              type="submit"
+              disabled={sending || !newMessage.trim()}
+              className="px-6 py-3 rounded-2xl bg-primary-700 text-white font-semibold hover:bg-primary-800 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+            >
+              <Send className="w-4 h-4" />
+              {sending ? "Sending..." : "Send"}
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
   );
 }

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/mongodb";
 import { Appointment } from "@/models/Appointment";
+import { sendAppointmentScheduledEmail } from "@/lib/email";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -46,6 +47,27 @@ export async function PATCH(request: Request) {
         { error: "Assessment not found" },
         { status: 404 }
       );
+    }
+    
+    // Send appointment email if status is being changed to 'scheduled' and appointmentDate is provided
+    if (updates.appointmentDate && (updates.status === 'scheduled' || assessment.status === 'scheduled')) {
+      // Send email asynchronously (don't block the response)
+      setTimeout(async () => {
+        try {
+          await sendAppointmentScheduledEmail({
+            clientName: assessment.name || assessment.ownerName,
+            clientEmail: assessment.email,
+            petName: assessment.petName,
+            appointmentDate: new Date(updates.appointmentDate),
+            primaryConcern: assessment.primaryConcern,
+            vetBehaviouristName: updates.vetBehaviouristName || undefined,
+          });
+          console.log('✅ Appointment email sent successfully');
+        } catch (emailError) {
+          console.error('❌ Failed to send appointment email:', emailError);
+          // Don't fail the request if email fails
+        }
+      }, 0);
     }
     
     return NextResponse.json(assessment);

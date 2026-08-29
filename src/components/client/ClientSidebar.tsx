@@ -6,32 +6,31 @@ import {
   LayoutDashboard, 
   FileText, 
   MessageSquare, 
-  Calendar,
-  Settings,
+  User,
   LogOut,
   Menu,
   X,
   PawPrint,
+  Bell,
 } from "lucide-react";
 import { useState } from "react";
 
 const menuItems = [
-  { href: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/admin/assessments", label: "Assessments", icon: FileText },
-  { href: "/admin/appointments", label: "Appointments", icon: Calendar },
-  { href: "/admin/messages", label: "Messages", icon: MessageSquare },
-  { href: "/admin/pets", label: "Pets", icon: PawPrint },
-  { href: "/admin/setup", label: "Settings", icon: Settings },
+  { href: "/client/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/client/assessment", label: "My Assessment", icon: FileText },
+  { href: "/client/messages", label: "Messages", icon: MessageSquare },
+  { href: "/client/profile", label: "Profile", icon: User },
+  { href: "/client/settings", label: "Settings", icon: User },
 ];
 
-export function AdminSidebar() {
+export function ClientSidebar() {
   const pathname = usePathname();
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
 
   const handleLogout = async () => {
     await fetch("/api/auth/logout", { method: "POST" });
-    router.push("/admin/login");
+    router.push("/client/login");
     router.refresh();
   };
 
@@ -40,7 +39,7 @@ export function AdminSidebar() {
       {/* Mobile Menu Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="lg:hidden fixed top-4 left-4 z-50 p-2 rounded-lg bg-primary-700 text-white"
+        className="lg:hidden fixed top-4 left-4 z-50 p-2 rounded-lg bg-accent-600 text-white shadow-lg"
       >
         {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
       </button>
@@ -66,13 +65,13 @@ export function AdminSidebar() {
         <div className="flex flex-col h-full">
           {/* Logo */}
           <div className="p-6 border-b border-primary-100">
-            <Link href="/admin/dashboard" className="flex items-center gap-3">
+            <Link href="/client/dashboard" className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-lg bg-primary-700 flex items-center justify-center">
                 <PawPrint className="w-6 h-6 text-white" />
               </div>
               <div>
                 <h1 className="font-display text-xl text-primary-900">NeuroPet</h1>
-                <p className="text-xs text-ink-600">Admin Portal</p>
+                <p className="text-xs text-ink-600">Client Portal</p>
               </div>
             </Link>
           </div>
@@ -106,8 +105,25 @@ export function AdminSidebar() {
             })}
           </nav>
 
-          {/* Logout */}
+          {/* Help Section */}
           <div className="p-4 border-t border-primary-100">
+            <div className="bg-primary-50 border border-primary-200 rounded-xl p-4 mb-3">
+              <div className="flex items-center gap-2 mb-2">
+                <Bell className="w-4 h-4 text-primary-700" />
+                <p className="text-xs font-semibold text-primary-900">Need Help?</p>
+              </div>
+              <p className="text-xs text-ink-600 mb-3">
+                Contact your behaviourist through Messages
+              </p>
+              <Link
+                href="/client/messages"
+                className="text-xs text-primary-700 hover:text-primary-900 font-semibold flex items-center gap-1"
+              >
+                Send Message →
+              </Link>
+            </div>
+
+            {/* Logout */}
             <button
               onClick={handleLogout}
               className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-ink-700 hover:bg-red-50 hover:text-red-600 border border-transparent hover:border-red-200 transition-all"

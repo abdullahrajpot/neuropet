@@ -108,5 +108,6 @@ export const config = {
     "/client/assessment/:path*",
     "/client/messages/:path*",
     "/client/profile/:path*",
+    "/client/settings/:path*",
   ],
 };

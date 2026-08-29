@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { nanoid } from "nanoid";
 import { connectDB } from "@/lib/mongodb";
 import { Appointment } from "@/models/Appointment";
+import { sendAssessmentConfirmationEmail } from "@/lib/email";
 
 export async function POST(request: Request) {
   try {
@@ -16,6 +17,24 @@ export async function POST(request: Request) {
       clientId,
       status: "pending",
     });
+    
+    // Send confirmation email to client (don't wait, run async)
+    // Using setTimeout to avoid blocking the response
+    setTimeout(async () => {
+      try {
+        await sendAssessmentConfirmationEmail({
+          clientName: body.name || body.ownerName,
+          clientEmail: body.email,
+          clientId: clientId,
+          petName: body.petName,
+          primaryConcern: body.primaryConcern,
+          submittedAt: appointment.createdAt,
+        });
+      } catch (emailError) {
+        console.error("Failed to send confirmation email:", emailError);
+        // Don't fail the request if email fails
+      }
+    }, 0);
     
     return NextResponse.json({ 
       id: appointment._id,

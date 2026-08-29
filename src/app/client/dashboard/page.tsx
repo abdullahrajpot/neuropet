@@ -10,10 +10,8 @@ import {
   User,
   CheckCircle,
   Clock,
-  LogOut,
+  PawPrint,
 } from "lucide-react";
-import { Container } from "@/components/ui/shared";
-import { motion } from "framer-motion";
 
 interface DashboardData {
   user: {
@@ -83,22 +81,14 @@ export default function ClientDashboardPage() {
     }
   };
 
-  const handleLogout = async () => {
-    await fetch("/api/auth/logout", { method: "POST" });
-    router.push("/client/login");
-    router.refresh();
-  };
-
   if (loading) {
     return (
-      <section className="min-h-screen bg-cream pt-24 pb-16">
-        <Container>
-          <div className="text-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-4 border-primary-700 border-t-transparent mx-auto"></div>
-            <p className="mt-4 text-ink-600">Loading your dashboard...</p>
-          </div>
-        </Container>
-      </section>
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-4 border-primary-700 border-t-transparent mx-auto"></div>
+          <p className="mt-4 text-ink-600">Loading your dashboard...</p>
+        </div>
+      </div>
     );
   }
 
@@ -108,169 +98,151 @@ export default function ClientDashboardPage() {
   const StatusIcon = statusInfo.icon;
 
   return (
-    <section className="min-h-screen bg-cream pt-24 pb-16">
-      <Container>
-        {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
-          <div>
-            <h1 className="font-display text-4xl text-primary-900 mb-2">
-              Welcome back, {data.user.name.split(" ")[0]}!
-            </h1>
-            <p className="text-ink-600">Here's an overview of your assessment</p>
-          </div>
-          <button
-            onClick={handleLogout}
-            className="flex items-center gap-2 px-6 py-3 rounded-full border-2 border-primary-700 text-primary-700 font-semibold hover:bg-primary-50 transition-all"
-          >
-            <LogOut className="w-4 h-4" />
-            Sign Out
-          </button>
-        </div>
+    <div className="space-y-6">
+      {/* Header */}
+      <div>
+        <h1 className="font-display text-3xl text-primary-900 mb-2">
+          Welcome back, {data.user.name.split(" ")[0]}!
+        </h1>
+        <p className="text-ink-600">Here's an overview of your assessment and care plan.</p>
+      </div>
 
-        {/* Status Card */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="bg-white rounded-3xl shadow-xl p-8 mb-6"
-        >
-          <div className="flex items-start gap-6">
-            <div className={`flex-shrink-0 w-16 h-16 rounded-2xl ${statusInfo.color.split(' ')[0]} flex items-center justify-center border-2 ${statusInfo.color.split('border-')[1]}`}>
-              <StatusIcon className="w-8 h-8" strokeWidth={2} />
+      {/* Status Card - Large Featured */}
+      <div className="bg-white rounded-2xl shadow-lg p-8 border-l-4 border-primary-700">
+        <div className="flex items-start gap-6">
+          <div className={`flex-shrink-0 w-16 h-16 rounded-2xl ${statusInfo.color.split(' ')[0]} flex items-center justify-center border-2 ${statusInfo.color.split('border-')[1]}`}>
+            <StatusIcon className="w-8 h-8" strokeWidth={2} />
+          </div>
+          <div className="flex-1">
+            <div className="flex flex-wrap items-center gap-3 mb-3">
+              <h2 className="font-display text-2xl text-primary-900">
+                Assessment Status
+              </h2>
+              <span className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-semibold border ${statusInfo.color}`}>
+                {statusInfo.label}
+              </span>
             </div>
-            <div className="flex-1">
-              <div className="flex items-center gap-3 mb-2">
-                <h2 className="font-display text-2xl text-primary-900">
-                  Assessment Status
-                </h2>
-                <span className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-semibold border ${statusInfo.color}`}>
-                  {statusInfo.label}
-                </span>
+            <p className="text-ink-600 mb-6">{statusInfo.description}</p>
+            
+            {/* Info Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
+              <div className="bg-cream rounded-xl p-4">
+                <p className="text-xs font-semibold text-primary-700 mb-1 uppercase tracking-wide">Pet Name</p>
+                <p className="text-lg font-bold text-primary-900">{data.assessment.petName}</p>
               </div>
-              <p className="text-ink-600 mb-4">{statusInfo.description}</p>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="bg-primary-50 rounded-2xl p-4">
-                  <p className="text-xs font-semibold text-primary-700 mb-1">Pet Name</p>
-                  <p className="text-lg font-bold text-primary-900">{data.assessment.petName}</p>
-                </div>
-                <div className="bg-primary-50 rounded-2xl p-4">
-                  <p className="text-xs font-semibold text-primary-700 mb-1">Main Concern</p>
-                  <p className="text-lg font-bold text-primary-900">{data.assessment.primaryConcern}</p>
-                </div>
-                <div className="bg-primary-50 rounded-2xl p-4">
-                  <p className="text-xs font-semibold text-primary-700 mb-1">Submitted</p>
-                  <p className="text-lg font-bold text-primary-900">
-                    {new Date(data.assessment.submittedAt).toLocaleDateString("en-GB")}
-                  </p>
-                </div>
+              <div className="bg-cream rounded-xl p-4">
+                <p className="text-xs font-semibold text-primary-700 mb-1 uppercase tracking-wide">Main Concern</p>
+                <p className="text-lg font-bold text-primary-900">{data.assessment.primaryConcern}</p>
               </div>
-              {data.assessment.appointmentDate && (
-                <div className="mt-4 bg-green-50 border-2 border-green-200 rounded-2xl p-4">
-                  <div className="flex items-center gap-3">
-                    <Calendar className="w-6 h-6 text-green-700" />
-                    <div>
-                      <p className="text-sm font-semibold text-green-900">Your Appointment</p>
-                      <p className="text-lg font-bold text-green-700">
-                        {new Date(data.assessment.appointmentDate).toLocaleString("en-GB", {
-                          weekday: "long",
-                          day: "numeric",
-                          month: "long",
-                          year: "numeric",
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })}
-                      </p>
-                    </div>
+              <div className="bg-cream rounded-xl p-4">
+                <p className="text-xs font-semibold text-primary-700 mb-1 uppercase tracking-wide">Submitted</p>
+                <p className="text-lg font-bold text-primary-900">
+                  {new Date(data.assessment.submittedAt).toLocaleDateString("en-GB")}
+                </p>
+              </div>
+            </div>
+
+            {/* Appointment Display */}
+            {data.assessment.appointmentDate && (
+              <div className="bg-green-50 border-2 border-green-200 rounded-xl p-4">
+                <div className="flex items-center gap-3">
+                  <Calendar className="w-6 h-6 text-green-700 flex-shrink-0" />
+                  <div>
+                    <p className="text-sm font-semibold text-green-900">Your Upcoming Appointment</p>
+                    <p className="text-base font-bold text-green-700">
+                      {new Date(data.assessment.appointmentDate).toLocaleString("en-GB", {
+                        weekday: "long",
+                        day: "numeric",
+                        month: "long",
+                        year: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </p>
                   </div>
                 </div>
-              )}
-            </div>
+              </div>
+            )}
           </div>
-        </motion.div>
-
-        {/* Quick Actions */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Link href="/client/assessment">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-              className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all p-6 group cursor-pointer"
-            >
-              <div className="flex items-center gap-4 mb-4">
-                <div className="w-12 h-12 rounded-full bg-primary-100 group-hover:bg-primary-700 transition-all flex items-center justify-center">
-                  <FileText className="w-6 h-6 text-primary-700 group-hover:text-white transition-all" />
-                </div>
-                <h3 className="font-display text-xl text-primary-900">View Assessment</h3>
-              </div>
-              <p className="text-sm text-ink-600">Review your submitted assessment details</p>
-            </motion.div>
-          </Link>
-
-          <Link href="/client/messages">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all p-6 group cursor-pointer relative"
-            >
-              {data.unreadMessages > 0 && (
-                <span className="absolute top-4 right-4 w-6 h-6 bg-accent-600 text-white rounded-full flex items-center justify-center text-xs font-bold">
-                  {data.unreadMessages}
-                </span>
-              )}
-              <div className="flex items-center gap-4 mb-4">
-                <div className="w-12 h-12 rounded-full bg-accent-100 group-hover:bg-accent-600 transition-all flex items-center justify-center">
-                  <MessageSquare className="w-6 h-6 text-accent-600 group-hover:text-white transition-all" />
-                </div>
-                <h3 className="font-display text-xl text-primary-900">Messages</h3>
-              </div>
-              <p className="text-sm text-ink-600">
-                {data.unreadMessages > 0
-                  ? `${data.unreadMessages} new message${data.unreadMessages > 1 ? "s" : ""}`
-                  : "Communicate with your behaviourist"}
-              </p>
-            </motion.div>
-          </Link>
-
-          <Link href="/client/profile">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-              className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all p-6 group cursor-pointer"
-            >
-              <div className="flex items-center gap-4 mb-4">
-                <div className="w-12 h-12 rounded-full bg-primary-100 group-hover:bg-primary-700 transition-all flex items-center justify-center">
-                  <User className="w-6 h-6 text-primary-700 group-hover:text-white transition-all" />
-                </div>
-                <h3 className="font-display text-xl text-primary-900">Profile</h3>
-              </div>
-              <p className="text-sm text-ink-600">Manage your account settings</p>
-            </motion.div>
-          </Link>
         </div>
+      </div>
 
-        {/* Info Box */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-          className="mt-8 bg-primary-50 border-2 border-primary-200 rounded-2xl p-6"
-        >
-          <h3 className="font-display text-lg text-primary-900 mb-2">Need Help?</h3>
-          <p className="text-sm text-ink-600 mb-4">
-            If you have any questions or concerns about your assessment or appointment,
-            please don't hesitate to message us through the portal.
-          </p>
+      {/* Quick Actions Section */}
+      <div>
+        <h2 className="font-display text-xl text-primary-900 mb-4">Quick Actions</h2>
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <Link
+            href="/client/assessment"
+            className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all p-6 group"
+          >
+            <div className="flex items-center gap-4 mb-3">
+              <div className="w-12 h-12 rounded-xl bg-primary-100 group-hover:bg-primary-700 transition-all flex items-center justify-center">
+                <FileText className="w-6 h-6 text-primary-700 group-hover:text-white transition-all" strokeWidth={2} />
+              </div>
+              <h3 className="font-display text-lg text-primary-900">My Assessment</h3>
+            </div>
+            <p className="text-sm text-ink-600">View your complete assessment details</p>
+          </Link>
+
           <Link
             href="/client/messages"
-            className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-primary-700 text-white font-semibold hover:bg-primary-800 transition-all"
+            className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all p-6 group relative"
           >
-            <MessageSquare className="w-4 h-4" />
-            Send a Message
+            {data.unreadMessages > 0 && (
+              <span className="absolute top-4 right-4 w-6 h-6 bg-accent-600 text-white rounded-full flex items-center justify-center text-xs font-bold animate-pulse">
+                {data.unreadMessages}
+              </span>
+            )}
+            <div className="flex items-center gap-4 mb-3">
+              <div className="w-12 h-12 rounded-xl bg-accent-100 group-hover:bg-accent-600 transition-all flex items-center justify-center">
+                <MessageSquare className="w-6 h-6 text-accent-600 group-hover:text-white transition-all" strokeWidth={2} />
+              </div>
+              <h3 className="font-display text-lg text-primary-900">Messages</h3>
+            </div>
+            <p className="text-sm text-ink-600">
+              {data.unreadMessages > 0
+                ? `${data.unreadMessages} new message${data.unreadMessages > 1 ? "s" : ""}`
+                : "Chat with your behaviourist"}
+            </p>
           </Link>
-        </motion.div>
-      </Container>
-    </section>
+
+          <Link
+            href="/client/profile"
+            className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all p-6 group"
+          >
+            <div className="flex items-center gap-4 mb-3">
+              <div className="w-12 h-12 rounded-xl bg-primary-100 group-hover:bg-primary-700 transition-all flex items-center justify-center">
+                <User className="w-6 h-6 text-primary-700 group-hover:text-white transition-all" strokeWidth={2} />
+              </div>
+              <h3 className="font-display text-lg text-primary-900">Profile</h3>
+            </div>
+            <p className="text-sm text-ink-600">Manage your account and settings</p>
+          </Link>
+        </div>
+      </div>
+
+      {/* Info Banner */}
+      <div className="bg-primary-50 border-2 border-primary-200 rounded-2xl p-6">
+        <div className="flex items-start gap-4">
+          <div className="flex-shrink-0 w-10 h-10 rounded-full bg-primary-700 flex items-center justify-center">
+            <PawPrint className="w-5 h-5 text-white" />
+          </div>
+          <div className="flex-1">
+            <h3 className="font-display text-lg text-primary-900 mb-2">Need Help?</h3>
+            <p className="text-sm text-ink-600 mb-4">
+              If you have any questions about your assessment, appointment, or care plan, 
+              our team is here to help through secure messaging.
+            </p>
+            <Link
+              href="/client/messages"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-primary-700 text-white font-semibold hover:bg-primary-800 transition-all text-sm"
+            >
+              <MessageSquare className="w-4 h-4" />
+              Send a Message
+            </Link>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }

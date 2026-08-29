@@ -9,6 +9,10 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
+    "@mui/icons-material": "^9.4.0",
+    "@mui/material": "^9.4.0",
     "bcryptjs": "^3.0.3",
     "framer-motion": "^11.18.0",
     "jose": "^6.2.10",
@@ -17,7 +21,8 @@
     "nanoid": "^6.0.1",
     "next": "^15.1.0",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "resend": "^6.24.0"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",

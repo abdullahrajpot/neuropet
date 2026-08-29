@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { ChevronLeft, Download, User, PawPrint, Home, Stethoscope } from "lucide-react";
-import { Container } from "@/components/ui/shared";
 
 export default function ClientAssessmentPage() {
   const router = useRouter();
@@ -33,14 +32,12 @@ export default function ClientAssessmentPage() {
 
   if (loading) {
     return (
-      <section className="min-h-screen bg-cream pt-24 pb-16">
-        <Container>
-          <div className="text-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-4 border-primary-700 border-t-transparent mx-auto"></div>
-            <p className="mt-4 text-ink-600">Loading your assessment...</p>
-          </div>
-        </Container>
-      </section>
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-4 border-primary-700 border-t-transparent mx-auto"></div>
+          <p className="mt-4 text-ink-600">Loading your assessment...</p>
+        </div>
+      </div>
     );
   }
 
@@ -135,30 +132,14 @@ export default function ClientAssessmentPage() {
   ];
 
   return (
-    <section className="min-h-screen bg-cream pt-24 pb-16">
-      <Container>
-        <div className="mb-6 flex items-center justify-between">
-          <Link
-            href="/client/dashboard"
-            className="inline-flex items-center gap-2 text-sm text-primary-700 hover:text-accent-600"
-          >
-            <ChevronLeft className="w-4 h-4" />
-            Back to Dashboard
-          </Link>
-          <button
-            onClick={() => window.print()}
-            className="flex items-center gap-2 px-6 py-2.5 rounded-full border-2 border-primary-700 text-primary-700 font-semibold hover:bg-primary-50 transition-all"
-          >
-            <Download className="w-4 h-4" />
-            Download PDF
-          </button>
-        </div>
-
-        <div className="bg-white rounded-3xl shadow-xl p-8 mb-6">
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div>
           <h1 className="font-display text-3xl text-primary-900 mb-2">
             Your Behaviour Assessment
           </h1>
-          <p className="text-sm text-ink-600">
+          <p className="text-ink-600">
             Submitted on{" "}
             {new Date(assessment.createdAt).toLocaleDateString("en-GB", {
               day: "numeric",
@@ -167,45 +148,54 @@ export default function ClientAssessmentPage() {
             })}
           </p>
         </div>
+        <button
+          onClick={() => window.print()}
+          className="flex items-center gap-2 px-5 py-2.5 rounded-full border-2 border-primary-700 text-primary-700 font-semibold hover:bg-primary-50 transition-all"
+        >
+          <Download className="w-4 h-4" />
+          Download PDF
+        </button>
+      </div>
 
-        <div className="space-y-6">
-          {sections.map((section, idx) => (
-            <div key={idx} className="bg-white rounded-2xl shadow-lg p-6">
-              <div className="flex items-center gap-3 mb-4 pb-3 border-b-2 border-primary-100">
-                {section.icon && <section.icon className="w-5 h-5 text-primary-700" />}
-                <h2 className="font-display text-xl text-primary-900">
-                  {section.title}
-                </h2>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {section.fields
-                  .filter((f) => f.value)
-                  .map((field, i) => (
-                    <div key={i} className="bg-primary-50 rounded-xl p-4">
-                      <p className="text-xs font-semibold text-primary-700 mb-1">
-                        {field.label}
-                      </p>
-                      <p className="text-sm text-primary-900">
-                        {field.value}
-                      </p>
-                    </div>
-                  ))}
-              </div>
+      {/* Assessment Sections */}
+      <div className="space-y-6">
+        {sections.map((section, idx) => (
+          <div key={idx} className="bg-white rounded-2xl shadow-lg p-6">
+            <div className="flex items-center gap-3 mb-4 pb-3 border-b-2 border-primary-100">
+              {section.icon && <section.icon className="w-5 h-5 text-primary-700" />}
+              <h2 className="font-display text-xl text-primary-900">
+                {section.title}
+              </h2>
             </div>
-          ))}
-        </div>
-
-        {assessment.additionalInfo && (
-          <div className="mt-6 bg-white rounded-2xl shadow-lg p-6">
-            <h2 className="font-display text-xl text-primary-900 mb-4">
-              Additional Information
-            </h2>
-            <p className="text-ink-700 leading-relaxed whitespace-pre-wrap">
-              {assessment.additionalInfo}
-            </p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {section.fields
+                .filter((f) => f.value)
+                .map((field, i) => (
+                  <div key={i} className="bg-cream rounded-xl p-4">
+                    <p className="text-xs font-semibold text-primary-700 mb-1 uppercase tracking-wide">
+                      {field.label}
+                    </p>
+                    <p className="text-sm text-primary-900">
+                      {field.value}
+                    </p>
+                  </div>
+                ))}
+            </div>
           </div>
-        )}
-      </Container>
-    </section>
+        ))}
+      </div>
+
+      {/* Additional Info */}
+      {assessment.additionalInfo && (
+        <div className="bg-white rounded-2xl shadow-lg p-6">
+          <h2 className="font-display text-xl text-primary-900 mb-4">
+            Additional Information
+          </h2>
+          <p className="text-ink-700 leading-relaxed whitespace-pre-wrap">
+            {assessment.additionalInfo}
+          </p>
+        </div>
+      )}
+    </div>
   );
 }
