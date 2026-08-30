@@ -4,10 +4,12 @@ import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { CheckCircle, Copy, User, Key, ArrowRight } from "lucide-react";
 import { Container } from "@/components/ui/shared";
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import { motion } from "framer-motion";
 
-export default function BookingConfirmationPage() {
+export const dynamic = 'force-dynamic';
+
+function ConfirmationContent() {
   const searchParams = useSearchParams();
   const clientId = searchParams.get("clientId");
   const petName = searchParams.get("petName");
@@ -165,5 +167,22 @@ export default function BookingConfirmationPage() {
         </motion.div>
       </Container>
     </section>
+  );
+}
+
+export default function BookingConfirmationPage() {
+  return (
+    <Suspense fallback={
+      <section className="min-h-screen bg-gradient-to-br from-primary-900 via-primary-800 to-primary-700 pt-28 pb-16">
+        <Container className="max-w-3xl">
+          <div className="bg-white rounded-3xl shadow-2xl p-8 md:p-12 text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-4 border-primary-700 border-t-transparent mx-auto"></div>
+            <p className="mt-4 text-ink-600">Loading...</p>
+          </div>
+        </Container>
+      </section>
+    }>
+      <ConfirmationContent />
+    </Suspense>
   );
 }

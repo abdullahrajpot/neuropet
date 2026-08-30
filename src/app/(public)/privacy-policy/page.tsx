@@ -119,7 +119,7 @@ export default function PrivacyPolicyPage() {
             <ul style={{ listStyle: "none", padding: 0, margin: "0 0 12px" }}>
               <BulletItem><strong>Identity Data</strong> — includes name.</BulletItem>
               <BulletItem><strong>Contact Data</strong> — includes billing address, delivery address, email address and telephone numbers.</BulletItem>
-              <BulletItem><strong>Pet Data</strong> — includes pet's name, species, date of birth, breed/colour and gender.</BulletItem>
+              <BulletItem><strong>Pet Data</strong> — includes pet&apos;s name, species, date of birth, breed/colour and gender.</BulletItem>
               <BulletItem><strong>Pet Medical History Data</strong> — includes name and address of vet, medical history and behavioural background.</BulletItem>
               <BulletItem><strong>Financial Data</strong> — includes bank account and payment card details.</BulletItem>
               <BulletItem><strong>Transaction Data</strong> — includes details about payments to and from you and other details of products and services you have purchased.</BulletItem>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
 import {
@@ -26,17 +26,7 @@ export default function AssessmentDetailPage() {
   const [appointmentDate, setAppointmentDate] = useState("");
   const [saving, setSaving] = useState(false);
 
-  useEffect(() => {
-    const stored = sessionStorage.getItem("neuropet-admin-key");
-    if (!stored) {
-      router.push("/admin/login");
-      return;
-    }
-    setKey(stored);
-    fetchAssessment(stored);
-  }, [router, params.id]);
-
-  const fetchAssessment = async (adminKey: string) => {
+  const fetchAssessment = useCallback(async (adminKey: string) => {
     try {
       const res = await fetch(`/api/appointments?key=${adminKey}`);
       if (res.ok) {
@@ -54,7 +44,17 @@ export default function AssessmentDetailPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [params.id]);
+
+  useEffect(() => {
+    const stored = sessionStorage.getItem("neuropet-admin-key");
+    if (!stored) {
+      router.push("/admin/login");
+      return;
+    }
+    setKey(stored);
+    fetchAssessment(stored);
+  }, [router, fetchAssessment]);
 
   const handleSave = async () => {
     setSaving(true);
@@ -248,7 +248,7 @@ export default function AssessmentDetailPage() {
                 </div>
                 <div className="space-y-3">
                   {section.fields
-                    .filter((f) => f.condition !== false && f.value)
+                    .filter((f) => ('condition' in f ? f.condition !== false : true) && f.value)
                     .map((field, i) => (
                       <div key={i} className="grid grid-cols-3 gap-4">
                         <span className="text-sm font-semibold text-ink-700">

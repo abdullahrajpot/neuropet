@@ -86,7 +86,7 @@ export default function AdminDashboardPage() {
       {/* Header */}
       <div>
         <h1 className="font-display text-3xl text-primary-900 mb-2">Dashboard</h1>
-        <p className="text-ink-600">Welcome back! Here's your practice overview.</p>
+        <p className="text-ink-600">Welcome back! Here&apos;s your practice overview.</p>
       </div>
 
       {/* Stats Grid */}

@@ -104,7 +104,7 @@ function VideoUpload({ onUpload, onFilesChange }: {
 }) {
   const [files, setFiles] = useState<File[]>([]);
   const [uploading, setUploading] = useState(false);
-  const fileInputRef = useState<HTMLInputElement | null>(null);
+  const [fileInputRefValue, setFileInputRef] = useState<HTMLInputElement | null>(null);
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = Array.from(e.target.files || []);
@@ -132,7 +132,9 @@ function VideoUpload({ onUpload, onFilesChange }: {
   return (
     <div className="space-y-4">
       <input
-        ref={(ref) => (fileInputRef[1] = ref)}
+        ref={(ref) => {
+          setFileInputRef(ref);
+        }}
         type="file"
         accept="video/*"
         multiple
@@ -241,7 +243,7 @@ function StepBar({ step }: { step: number }) {
 const FAQ_DATA = [
   { q: "How long does the assessment take?", a: "The initial consultation typically takes 60-90 minutes. This allows us to thoroughly understand your pet's behaviour and develop a comprehensive plan." },
   { q: "Do you offer virtual consultations?", a: "Yes! We offer both in-person and virtual consultations via video call. Virtual sessions are ideal for clients outside our immediate area." },
-  { q: "What should I prepare before the consultation?", a: "Please complete this assessment form thoroughly. If possible, take short videos of the behaviour you're concerned about. Having your pet's vet records on hand is also helpful." },
+  { q: "What should I prepare before the consultation?", a: "Please complete this assessment form thoroughly. If possible, take short videos of the behaviour you&apos;re concerned about. Having your pet&apos;s vet records on hand is also helpful." },
   { q: "How soon can I expect results?", a: "Many clients see improvements within the first 2-4 weeks. However, behaviour modification takes time and consistency. We provide ongoing support throughout your journey." },
 ];
 
@@ -469,10 +471,10 @@ export default function BookPage() {
               Professional Behaviour Assessment
             </span>
             <h1 className="font-display text-4xl md:text-5xl lg:text-6xl text-white mb-6 leading-tight">
-              Let's understand your pet's <span className="text-accent-300">behaviour</span>
+              Let&apos;s understand your pet&apos;s <span className="text-accent-300">behaviour</span>
             </h1>
             <p className="text-lg md:text-xl text-primary-100 max-w-2xl mx-auto leading-relaxed mb-10">
-              Complete our comprehensive assessment form to help us understand your pet's needs. This ensures we can provide the most effective behaviour plan from your first session.
+              Complete our comprehensive assessment form to help us understand your pet&apos;s needs. This ensures we can provide the most effective behaviour plan from your first session.
             </p>
 
             {/* Trust indicators */}
@@ -543,7 +545,7 @@ export default function BookPage() {
                   {step === 0 && (<>
                     <div className="mb-4">
                       <h3 className="font-display text-xl text-primary-900 mb-2">About You</h3>
-                      <p className="text-sm text-ink-600">Let's start with your contact information</p>
+                      <p className="text-sm text-ink-600">Let&apos;s start with your contact information</p>
                     </div>
                     <PillInput id="ownerName" label="Your full name" placeholder="e.g., John Smith" value={form.ownerName} onChange={(v) => update("ownerName", v)} />
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -558,10 +560,10 @@ export default function BookPage() {
                   {step === 1 && (<>
                     <div className="mb-4">
                       <h3 className="font-display text-xl text-primary-900 mb-2">About Your Pet</h3>
-                      <p className="text-sm text-ink-600">Tell us about your pet's basic details</p>
+                      <p className="text-sm text-ink-600">Tell us about your pet&apos;s basic details</p>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <PillInput id="petName" label="What is your pet's name?" placeholder="e.g., Buddy" value={form.petName} onChange={(v) => update("petName", v)} />
+                      <PillInput id="petName" label="What is your pet&apos;s name?" placeholder="e.g., Buddy" value={form.petName} onChange={(v) => update("petName", v)} />
                       <PillSelect id="species" label="What type of pet?" value={form.species} onChange={(v) => update("species", v)} options={["Dog", "Cat", "Other"]} />
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -577,7 +579,7 @@ export default function BookPage() {
                       <PillInput id="acquiredFrom" label="Where did you get them from?" placeholder="e.g., Breeder, Rescue centre" value={form.acquiredFrom} onChange={(v) => update("acquiredFrom", v)} />
                       <PillInput id="acquiredAge" label="How old were they then?" placeholder="e.g., 8 weeks" value={form.acquiredAge} onChange={(v) => update("acquiredAge", v)} />
                     </div>
-                    <PillSelect id="rehomed" label="Has your pet been rehomed before?" value={form.rehomed} onChange={(v) => update("rehomed", v)} options={["No", "Yes", "Don't know"]} />
+                    <PillSelect id="rehomed" label="Has your pet been rehomed before?" value={form.rehomed} onChange={(v) => update("rehomed", v)} options={["No", "Yes", "Don&apos;t know"]} />
                     {form.rehomed === "Yes" && (
                       <PillTextarea id="rehomeReason" label="If yes, do you know why they were rehomed?" placeholder="Please share what you know..." value={form.rehomeReason} onChange={(v) => update("rehomeReason", v)} rows={2} />
                     )}
@@ -610,9 +612,9 @@ export default function BookPage() {
                   {step === 3 && (<>
                     <div className="mb-4">
                       <h3 className="font-display text-xl text-primary-900 mb-2">Veterinary Information</h3>
-                      <p className="text-sm text-ink-600">Your pet's medical care details</p>
+                      <p className="text-sm text-ink-600">Your pet&apos;s medical care details</p>
                     </div>
-                    <PillInput id="vetName" label="What is your vet's practice name?" placeholder="e.g., ABC Veterinary Clinic" value={form.vetName} onChange={(v) => update("vetName", v)} />
+                    <PillInput id="vetName" label="What is your vet&apos;s practice name?" placeholder="e.g., ABC Veterinary Clinic" value={form.vetName} onChange={(v) => update("vetName", v)} />
                     <PillInput id="vetAddress" label="Vet practice address" placeholder="Street address and town" value={form.vetAddress} onChange={(v) => update("vetAddress", v)} />
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <PillInput id="vetPhone" label="Vet practice phone number" type="tel" placeholder="01234 567890" value={form.vetPhone} onChange={(v) => update("vetPhone", v)} />
@@ -644,20 +646,20 @@ export default function BookPage() {
                   {step === 5 && (<>
                     <div className="mb-4">
                       <h3 className="font-display text-xl text-primary-900 mb-2">Main Concerns</h3>
-                      <p className="text-sm text-ink-600">Tell us what you're most worried about</p>
+                      <p className="text-sm text-ink-600">Tell us what you&apos;re most worried about</p>
                     </div>
                     <PillInput id="primaryConcern" label="What is your main concern?" placeholder="e.g., Separation anxiety, aggression towards other dogs" value={form.primaryConcern} onChange={(v) => update("primaryConcern", v)} />
                     <PillTextarea id="concernDescription" label="Please describe the behaviour in detail" placeholder="What exactly does your pet do? Be as specific as possible" value={form.concernDescription} onChange={(v) => update("concernDescription", v)} rows={4} />
                     <PillSelect id="concernSeverity" label="How severe is the issue?" value={form.concernSeverity} onChange={(v) => update("concernSeverity", v)} options={["Mild - A minor concern", "Moderate - Affecting daily life", "Severe - Major impact"]} />
-                    <PillInput id="concernImpact" label="How does this affect your family?" placeholder="e.g., Can't have visitors, can't go on walks" value={form.concernImpact} onChange={(v) => update("concernImpact", v)} />
-                    <PillTextarea id="attemptedSolutions" label="What have you already tried?" placeholder="List any training methods, products, or techniques you've used" value={form.attemptedSolutions} onChange={(v) => update("attemptedSolutions", v)} rows={2} />
+                    <PillInput id="concernImpact" label="How does this affect your family?" placeholder="e.g., Can&apos;t have visitors, can&apos;t go on walks" value={form.concernImpact} onChange={(v) => update("concernImpact", v)} />
+                    <PillTextarea id="attemptedSolutions" label="What have you already tried?" placeholder="List any training methods, products, or techniques you&apos;ve used" value={form.attemptedSolutions} onChange={(v) => update("attemptedSolutions", v)} rows={2} />
                   </>)}
 
                   {/* STEP 6: Daily Life */}
                   {step === 6 && (<>
                     <div className="mb-4">
                       <h3 className="font-display text-xl text-primary-900 mb-2">Daily Life</h3>
-                      <p className="text-sm text-ink-600">Your pet's typical daily routine</p>
+                      <p className="text-sm text-ink-600">Your pet&apos;s typical daily routine</p>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <PillInput id="exerciseAmount" label="How much exercise daily?" placeholder="e.g., 2 hours" value={form.exerciseAmount} onChange={(v) => update("exerciseAmount", v)} />

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
@@ -61,11 +61,7 @@ export default function ClientDashboardPage() {
   const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetchDashboardData();
-  }, []);
-
-  const fetchDashboardData = async () => {
+  const fetchDashboardData = useCallback(async () => {
     try {
       const res = await fetch("/api/client/dashboard");
       if (res.ok) {
@@ -79,7 +75,11 @@ export default function ClientDashboardPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [router]);
+
+  useEffect(() => {
+    fetchDashboardData();
+  }, [fetchDashboardData]);
 
   if (loading) {
     return (
@@ -104,7 +104,7 @@ export default function ClientDashboardPage() {
         <h1 className="font-display text-3xl text-primary-900 mb-2">
           Welcome back, {data.user.name.split(" ")[0]}!
         </h1>
-        <p className="text-ink-600">Here's an overview of your assessment and care plan.</p>
+        <p className="text-ink-600">Here&apos;s an overview of your assessment and care plan.</p>
       </div>
 
       {/* Status Card - Large Featured */}

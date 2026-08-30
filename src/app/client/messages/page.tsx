@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Send, User } from "lucide-react";
@@ -23,22 +23,22 @@ export default function ClientMessagesPage() {
   const [assessmentId, setAssessmentId] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    fetchUserAndMessages();
-    // Poll for new messages every 10 seconds
-    const interval = setInterval(fetchMessages, 10000);
-    return () => clearInterval(interval);
-  }, []);
+  const fetchMessages = useCallback(async (aId?: string) => {
+    const id = aId || assessmentId;
+    if (!id) return;
 
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
+    try {
+      const res = await fetch(`/api/messages?assessmentId=${id}`);
+      if (res.ok) {
+        const data = await res.json();
+        setMessages(data);
+      }
+    } catch (error) {
+      console.error("Failed to fetch messages:", error);
+    }
+  }, [assessmentId]);
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
-
-  const fetchUserAndMessages = async () => {
+  const fetchUserAndMessages = useCallback(async () => {
     try {
       // Get user info first
       const userRes = await fetch("/api/auth/me");
@@ -54,21 +54,21 @@ export default function ClientMessagesPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [router, fetchMessages]);
 
-  const fetchMessages = async (aId?: string) => {
-    const id = aId || assessmentId;
-    if (!id) return;
+  useEffect(() => {
+    fetchUserAndMessages();
+    // Poll for new messages every 10 seconds
+    const interval = setInterval(fetchMessages, 10000);
+    return () => clearInterval(interval);
+  }, [fetchUserAndMessages, fetchMessages]);
 
-    try {
-      const res = await fetch(`/api/messages?assessmentId=${id}`);
-      if (res.ok) {
-        const data = await res.json();
-        setMessages(data);
-      }
-    } catch (error) {
-      console.error("Failed to fetch messages:", error);
-    }
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   const handleSend = async (e: React.FormEvent) => {

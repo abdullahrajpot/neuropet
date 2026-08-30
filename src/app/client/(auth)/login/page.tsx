@@ -124,7 +124,7 @@ export default function ClientLoginPage() {
 
             <div className="mt-6 pt-6 border-t border-primary-100">
               <p className="text-center text-sm text-ink-600 mb-4">
-                Don't have an account yet?
+                Don&apos;t have an account yet?
               </p>
               <Link
                 href="/client/register"

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { Container } from "@/components/ui/shared";
 import { UserPlus, CheckCircle, AlertCircle } from "lucide-react";
 
@@ -207,12 +208,12 @@ export default function AdminSetupPage() {
         </div>
 
         <div className="mt-6 text-center">
-          <a
+          <Link
             href="/"
             className="text-sm text-primary-100 hover:text-white transition-colors"
           >
             ← Back to Home
-          </a>
+          </Link>
         </div>
       </Container>
     </section>

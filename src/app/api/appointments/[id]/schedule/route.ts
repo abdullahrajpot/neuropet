@@ -5,9 +5,10 @@ import { sendAppointmentScheduledEmail } from "@/lib/email";
 
 export async function PATCH(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const body = await request.json();
     const { appointmentDate, status, vetBehaviouristName } = body;
 
@@ -15,7 +16,7 @@ export async function PATCH(
     
     // Update appointment
     const appointment = await Appointment.findByIdAndUpdate(
-      params.id,
+      id,
       {
         appointmentDate: new Date(appointmentDate),
         status: status || "scheduled",

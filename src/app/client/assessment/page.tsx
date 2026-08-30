@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { ChevronLeft, Download, User, PawPrint, Home, Stethoscope } from "lucide-react";
@@ -10,11 +10,7 @@ export default function ClientAssessmentPage() {
   const [assessment, setAssessment] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetchAssessment();
-  }, []);
-
-  const fetchAssessment = async () => {
+  const fetchAssessment = useCallback(async () => {
     try {
       const res = await fetch("/api/client/assessment");
       if (res.ok) {
@@ -28,7 +24,11 @@ export default function ClientAssessmentPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [router]);
+
+  useEffect(() => {
+    fetchAssessment();
+  }, [fetchAssessment]);
 
   if (loading) {
     return (

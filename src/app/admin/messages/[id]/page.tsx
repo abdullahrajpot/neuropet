@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
 import { ChevronLeft, Send, User } from "lucide-react";
@@ -33,22 +33,19 @@ export default function AdminMessagesPage() {
   const [sending, setSending] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    fetchData();
-    // Poll for new messages every 10 seconds
-    const interval = setInterval(fetchMessages, 10000);
-    return () => clearInterval(interval);
+  const fetchMessages = useCallback(async () => {
+    try {
+      const res = await fetch(`/api/messages?assessmentId=${assessmentId}`);
+      if (res.ok) {
+        const data = await res.json();
+        setMessages(data);
+      }
+    } catch (error) {
+      console.error("Failed to fetch messages:", error);
+    }
   }, [assessmentId]);
 
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
-
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
-
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     try {
       // Fetch assessment info
       const key = sessionStorage.getItem("neuropet-admin-key");
@@ -76,18 +73,21 @@ export default function AdminMessagesPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [router, assessmentId, fetchMessages]);
 
-  const fetchMessages = async () => {
-    try {
-      const res = await fetch(`/api/messages?assessmentId=${assessmentId}`);
-      if (res.ok) {
-        const data = await res.json();
-        setMessages(data);
-      }
-    } catch (error) {
-      console.error("Failed to fetch messages:", error);
-    }
+  useEffect(() => {
+    fetchData();
+    // Poll for new messages every 10 seconds
+    const interval = setInterval(fetchMessages, 10000);
+    return () => clearInterval(interval);
+  }, [fetchData, fetchMessages]);
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   const handleSend = async (e: React.FormEvent) => {
