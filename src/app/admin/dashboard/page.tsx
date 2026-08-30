@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { 
@@ -21,6 +21,28 @@ export default function AdminDashboardPage() {
     total: 0 
   });
   const [loading, setLoading] = useState(true);
+
+  const fetchStats = useCallback(async () => {
+    try {
+      const key = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || "neuropet-admin";
+      const res = await fetch(`/api/appointments?key=${key}`);
+      if (res.ok) {
+        const appointments = await res.json();
+        if (Array.isArray(appointments)) {
+          setStats({
+            total: appointments.length,
+            pending: appointments.filter((a) => a.status === "pending").length,
+            reviewed: appointments.filter((a) => a.status === "reviewed").length,
+            scheduled: appointments.filter((a) => a.status === "scheduled").length,
+          });
+        }
+      }
+    } catch (error) {
+      console.error("Failed to fetch stats:", error);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
     // Check authentication
@@ -46,29 +68,7 @@ export default function AdminDashboardPage() {
     };
 
     checkAuth();
-  }, [router]);
-
-  const fetchStats = async () => {
-    try {
-      const key = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || "neuropet-admin";
-      const res = await fetch(`/api/appointments?key=${key}`);
-      if (res.ok) {
-        const appointments = await res.json();
-        if (Array.isArray(appointments)) {
-          setStats({
-            total: appointments.length,
-            pending: appointments.filter((a) => a.status === "pending").length,
-            reviewed: appointments.filter((a) => a.status === "reviewed").length,
-            scheduled: appointments.filter((a) => a.status === "scheduled").length,
-          });
-        }
-      }
-    } catch (error) {
-      console.error("Failed to fetch stats:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  }, [router, fetchStats]);
 
   if (loading) {
     return (
