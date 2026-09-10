@@ -12,12 +12,16 @@ import {
   Menu,
   X,
   PawPrint,
+  CreditCard,
+  Clock,
 } from "lucide-react";
 import { useState } from "react";
 
 const menuItems = [
   { href: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/admin/assessments", label: "Assessments", icon: FileText },
+  { href: "/admin/timeslots", label: "Time Slots", icon: Clock },
+  { href: "/admin/transactions", label: "Transactions", icon: CreditCard },
   { href: "/admin/appointments", label: "Appointments", icon: Calendar },
   { href: "/admin/messages", label: "Messages", icon: MessageSquare },
   { href: "/admin/pets", label: "Pets", icon: PawPrint },

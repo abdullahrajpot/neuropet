@@ -11,6 +11,7 @@ import {
   CheckCircle,
   Clock,
   PawPrint,
+  CreditCard,
 } from "lucide-react";
 
 interface DashboardData {
@@ -25,6 +26,11 @@ interface DashboardData {
     primaryConcern: string;
     appointmentDate?: string;
     submittedAt: string;
+    consultationType?: string;
+    tipAmount?: number;
+    paymentAmount?: number;
+    paymentStatus?: string;
+    paymentDate?: string;
   };
   unreadMessages: number;
 }
@@ -97,6 +103,18 @@ export default function ClientDashboardPage() {
   const statusInfo = STATUS_INFO[data.assessment.status as keyof typeof STATUS_INFO] || STATUS_INFO.pending;
   const StatusIcon = statusInfo.icon;
 
+  // Plan details mapping
+  const planDetails: Record<string, { name: string; color: string }> = {
+    'discovery': { name: 'Free Discovery Call', color: 'bg-blue-100 text-blue-800' },
+    'behavior-essentials': { name: 'Behaviour Essentials', color: 'bg-primary-100 text-primary-900' },
+    'behavior-intensive': { name: 'Behaviour Intensive', color: 'bg-accent-100 text-accent-800' },
+    'puppy-foundations': { name: 'Puppy Foundations', color: 'bg-green-100 text-green-800' },
+  };
+
+  const currentPlan = data.assessment.consultationType 
+    ? planDetails[data.assessment.consultationType] 
+    : null;
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -166,6 +184,83 @@ export default function ClientDashboardPage() {
           </div>
         </div>
       </div>
+
+      {/* Plan & Payment Information */}
+      {currentPlan ? (
+        <div className="bg-white rounded-2xl shadow-lg p-6">
+          <h2 className="font-display text-xl text-primary-900 mb-4">Your Plan & Payment</h2>
+          
+          <div className="grid gap-4 sm:grid-cols-2">
+            {/* Plan Information */}
+            <div className="bg-cream rounded-xl p-5">
+              <p className="text-xs font-semibold text-primary-700 mb-2 uppercase tracking-wide">Active Plan</p>
+              <span className={`inline-flex px-4 py-2 rounded-full text-sm font-bold ${currentPlan.color}`}>
+                {currentPlan.name}
+              </span>
+              {data.assessment.paymentAmount && data.assessment.paymentAmount > 0 && (
+                <p className="text-2xl font-bold text-primary-900 mt-3">
+                  £{data.assessment.paymentAmount.toFixed(2)}
+                </p>
+              )}
+              {data.assessment.tipAmount && data.assessment.tipAmount > 0 && (
+                <p className="text-xs text-ink-600 mt-1">
+                  (Includes £{data.assessment.tipAmount.toFixed(2)} tip)
+                </p>
+              )}
+            </div>
+
+            {/* Payment Status */}
+            {data.assessment.paymentStatus && (
+              <div className="bg-cream rounded-xl p-5">
+                <p className="text-xs font-semibold text-primary-700 mb-2 uppercase tracking-wide">Payment Status</p>
+                <span className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold ${
+                  data.assessment.paymentStatus === 'succeeded' 
+                    ? 'bg-green-100 text-green-800' 
+                    : data.assessment.paymentStatus === 'pending'
+                    ? 'bg-yellow-100 text-yellow-800'
+                    : 'bg-red-100 text-red-800'
+                }`}>
+                  <CheckCircle className="w-4 h-4" />
+                  {data.assessment.paymentStatus === 'succeeded' ? 'Paid' : 
+                   data.assessment.paymentStatus === 'pending' ? 'Pending' : 
+                   'Failed'}
+                </span>
+                {data.assessment.paymentDate && (
+                  <p className="text-sm text-ink-600 mt-2">
+                    {new Date(data.assessment.paymentDate).toLocaleDateString("en-GB", {
+                      day: "numeric",
+                      month: "short",
+                      year: "numeric",
+                    })}
+                  </p>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+      ) : (
+        /* Upgrade Option for Free Discovery Clients */
+        <div className="bg-gradient-to-br from-accent-50 to-accent-100 border-2 border-accent-200 rounded-2xl p-6">
+          <div className="flex items-start gap-4">
+            <div className="flex-shrink-0 w-12 h-12 rounded-full bg-accent-600 flex items-center justify-center">
+              <PawPrint className="w-6 h-6 text-white" />
+            </div>
+            <div className="flex-1">
+              <h3 className="font-display text-xl text-primary-900 mb-2">Ready to Continue?</h3>
+              <p className="text-sm text-ink-700 mb-4">
+                After your free discovery consultation, you can upgrade to a full training programme to work closely with our behaviourist and achieve lasting results for {data.assessment.petName}.
+              </p>
+              <Link
+                href="/client/upgrade"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-accent-600 text-white font-semibold hover:bg-accent-700 transition-all shadow-md hover:shadow-lg"
+              >
+                <CreditCard className="w-4 h-4" />
+                View Training Plans
+              </Link>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Quick Actions Section */}
       <div>

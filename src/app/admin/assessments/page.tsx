@@ -13,6 +13,8 @@ import {
   Clock,
   Archive,
   ChevronLeft,
+  CreditCard,
+  PoundSterling,
 } from "lucide-react";
 import { Container } from "@/components/ui/shared";
 import { motion } from "framer-motion";
@@ -28,6 +30,9 @@ interface Assessment {
   status: string;
   createdAt: string;
   appointmentDate?: string;
+  consultationType?: string;
+  paymentAmount?: number;
+  paymentStatus?: string;
 }
 
 const STATUS_COLORS = {
@@ -46,6 +51,13 @@ const STATUS_ICONS = {
   archived: Archive,
 };
 
+const PLAN_DETAILS: Record<string, { name: string; color: string }> = {
+  'discovery': { name: 'Free Discovery', color: 'bg-blue-100 text-blue-800' },
+  'behavior-essentials': { name: 'Behaviour Essentials', color: 'bg-primary-100 text-primary-900' },
+  'behavior-intensive': { name: 'Behaviour Intensive', color: 'bg-accent-100 text-accent-800' },
+  'puppy-foundations': { name: 'Puppy Foundations', color: 'bg-green-100 text-green-800' },
+};
+
 export default function AdminAssessmentsPage() {
   const router = useRouter();
   const [key, setKey] = useState("");
@@ -55,13 +67,35 @@ export default function AdminAssessmentsPage() {
   const [filterStatus, setFilterStatus] = useState("all");
 
   useEffect(() => {
-    const stored = sessionStorage.getItem("neuropet-admin-key");
-    if (!stored) {
-      router.push("/admin/login");
-      return;
-    }
-    setKey(stored);
-    fetchAssessments(stored);
+    const checkAuthAndFetch = async () => {
+      try {
+        // Check JWT authentication first
+        const authRes = await fetch("/api/auth/me");
+        if (!authRes.ok) {
+          router.push("/admin/login");
+          return;
+        }
+        const authData = await authRes.json();
+        if (authData.user.role !== "admin") {
+          router.push("/admin/login");
+          return;
+        }
+
+        // Use admin password for API calls
+        const adminKey = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || "neuropet-admin";
+        setKey(adminKey);
+        
+        // Fetch assessments
+        await fetchAssessments(adminKey);
+      } catch (error) {
+        console.error("Error:", error);
+        router.push("/admin/login");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    checkAuthAndFetch();
   }, [router]);
 
   const fetchAssessments = async (adminKey: string) => {
@@ -73,8 +107,6 @@ export default function AdminAssessmentsPage() {
       }
     } catch (error) {
       console.error("Failed to fetch assessments:", error);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -97,6 +129,17 @@ export default function AdminAssessmentsPage() {
     scheduled: assessments.filter((a) => a.status === "scheduled").length,
     completed: assessments.filter((a) => a.status === "completed").length,
   };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-4 border-primary-700 border-t-transparent mx-auto"></div>
+          <p className="mt-4 text-ink-600">Loading assessments...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <section className="min-h-screen bg-cream pt-24 pb-16">
@@ -190,6 +233,9 @@ export default function AdminAssessmentsPage() {
           <div className="space-y-4">
             {filteredAssessments.map((assessment, index) => {
               const StatusIcon = STATUS_ICONS[assessment.status as keyof typeof STATUS_ICONS] || Clock;
+              const planInfo = assessment.consultationType 
+                ? PLAN_DETAILS[assessment.consultationType] 
+                : null;
               
               return (
                 <motion.div
@@ -221,7 +267,30 @@ export default function AdminAssessmentsPage() {
                           <p className="mt-2 text-sm text-accent-600 font-semibold">
                             {assessment.primaryConcern}
                           </p>
-                          <p className="text-xs text-ink-500 mt-1">
+                          
+                          {/* Plan & Payment Info */}
+                          <div className="flex flex-wrap items-center gap-3 mt-3">
+                            {planInfo && (
+                              <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold ${planInfo.color}`}>
+                                <CreditCard className="w-3 h-3" />
+                                {planInfo.name}
+                              </span>
+                            )}
+                            {assessment.paymentAmount && assessment.paymentAmount > 0 && (
+                              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-green-100 text-green-800">
+                                <PoundSterling className="w-3 h-3" />
+                                £{assessment.paymentAmount.toFixed(2)}
+                              </span>
+                            )}
+                            {assessment.paymentStatus === 'succeeded' && (
+                              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-green-100 text-green-800 border border-green-200">
+                                <Check className="w-3 h-3" />
+                                Paid
+                              </span>
+                            )}
+                          </div>
+                          
+                          <p className="text-xs text-ink-500 mt-2">
                             Submitted:{" "}
                             {new Date(assessment.createdAt).toLocaleDateString("en-GB", {
                               day: "numeric",

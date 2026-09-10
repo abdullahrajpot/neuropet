@@ -1,13 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Check, ChevronLeft, Upload, Shield, Clock, Users } from "lucide-react";
 import { Container } from "@/components/ui/shared";
 import { siteConfig } from "@/lib/site-config";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { fadeUp } from "@/lib/motion";
 import Link from "next/link";
+import { TipSection } from "@/components/booking/TipSection";
+import { PaymentStep } from "@/components/booking/PaymentStep";
+import { TimeSlotSelector } from "@/components/booking/TimeSlotSelector";
 
 const STEPS = [
   "Your Details",
@@ -18,7 +21,9 @@ const STEPS = [
   "Main Concerns",
   "Daily Life",
   "Training & Diet",
-  "Review & Submit"
+  "Review & Submit",
+  "Select Time Slot",
+  "Payment"
 ];
 
 /* ── pill input ── */
@@ -356,72 +361,122 @@ function FollowUs() {
 /* ════════════════════════════════════════
    MAIN PAGE
 ════════════════════════════════════════ */
-export default function BookPage() {
+function BookPageContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [step, setStep] = useState(0);
   const [loading, setLoading] = useState(false);
   const [videoFiles, setVideoFiles] = useState<File[]>([]);
   const [videoUploaded, setVideoUploaded] = useState(false);
   const [consentGiven, setConsentGiven] = useState(false);
+  const [tipAmount, setTipAmount] = useState<number | null>(null);
+  const [paymentIntentId, setPaymentIntentId] = useState<string | undefined>(undefined);
+  const [selectedTimeSlot, setSelectedTimeSlot] = useState<{
+    slotId: string;
+    date: Date;
+    startTime: string;
+    endTime: string;
+  } | null>(null);
+  
+  // Get consultation type and calculate amount from URL
+  const urlPlan = searchParams?.get('plan') || searchParams?.get('type') || 'discovery';
+  const [consultationType, setConsultationType] = useState<string>(urlPlan);
+  const [planAmount, setPlanAmount] = useState<number>(0);
+
+  // Calculate plan amount based on consultation type
+  useEffect(() => {
+    const amounts: Record<string, number> = {
+      'discovery': 0,
+      'behavior-essentials': 270,
+      'behavior-intensive': 470,
+      'puppy-foundations': 220,
+    };
+    setPlanAmount(amounts[consultationType] || 0);
+  }, [consultationType]);
+  
   const [form, setForm] = useState({
     // Step 0: Your Details
-    ownerName: "", email: "", phone: "", address: "", postcode: "",
+    ownerName: "Test User", email: "test@example.com", phone: "07123456789", address: "123 Test Street", postcode: "SW1A 1AA",
     
-    // Step 1: About Your Pet
-    petName: "", species: "Dog", breed: "", age: "", gender: "Male", neutered: "Yes",
-    dateAcquired: "", acquiredFrom: "", acquiredAge: "", rehomed: "No", rehomeReason: "",
+    // Step 1: About Your Pet (Dog-focused)
+    petName: "Buddy", species: "Dog", breed: "Labrador", age: "3 years", gender: "Male", neutered: "Yes",
+    dateAcquired: "2021-01-01", acquiredFrom: "Breeder", acquiredAge: "8 weeks", rehomed: "No", rehomeReason: "",
     
     // Step 2: Living Situation
-    householdAdults: "", householdChildren: "", childrenAges: "",
+    householdAdults: "2", householdChildren: "0", childrenAges: "",
     otherPets: "No", otherPetsDetails: "", homeType: "House", hasGarden: "Yes",
     
     // Step 3: Veterinary Care
-    vetName: "", vetAddress: "", vetPhone: "", lastVetVisit: "",
+    vetName: "Test Vet Clinic", vetAddress: "456 Vet Road", vetPhone: "01234567890", lastVetVisit: "2024-01-01",
     currentMedications: "", medicalConditions: "",
     
     // Step 4: Behaviour History
-    behaviorConcernDuration: "", behaviorConcernFrequency: "",
-    triggersOrPatterns: "", previousIncidents: "No", incidentDetails: "",
+    behaviorConcernDuration: "6 months", behaviorConcernFrequency: "Daily",
+    triggersOrPatterns: "Loud noises", previousIncidents: "No", incidentDetails: "",
     behaviorWorseningOrImproving: "Stable",
     
     // Step 5: Main Concerns
-    primaryConcern: "", concernDescription: "", concernSeverity: "Moderate",
-    concernImpact: "", attemptedSolutions: "",
+    primaryConcern: "Barking", concernDescription: "Excessive barking at visitors", concernSeverity: "Moderate",
+    concernImpact: "Disturbs neighbors", attemptedSolutions: "Training videos",
     
     // Step 6: Daily Life
-    exerciseAmount: "", exerciseType: "", feedingSchedule: "",
-    sleepingArrangement: "", leftAloneDuration: "", leftAloneReaction: "",
+    exerciseAmount: "2 hours", exerciseType: "Walks", feedingSchedule: "Twice daily",
+    sleepingArrangement: "Dog bed", leftAloneDuration: "4 hours", leftAloneReaction: "Calm",
     
     // Step 7: Training & Diet
     previousTraining: "No", trainingDetails: "", trainingMethods: "",
-    diet: "", allergies: "", currentSupplements: "",
+    diet: "Dry kibble", allergies: "", currentSupplements: "",
     
     // General
     preferredDate: "", additionalInfo: "",
   });
   const update = (field: string, value: string) => setForm((f) => ({ ...f, [field]: value }));
 
-  const submit = async () => {
-    if (!consentGiven) {
-      alert("Please agree to our privacy policy before submitting.");
-      return;
-    }
+  const handlePaymentComplete = async (paymentId?: string) => {
+    setPaymentIntentId(paymentId);
+    await submit(paymentId);
+  };
+
+  const submit = async (paymentId?: string) => {
     setLoading(true);
     try {
-      // First, submit the form data
+      // Submit the form data with tip and consultation type
       const res = await fetch("/api/appointments", {
         method: "POST", 
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 
           ...form, 
+          consultationType,
+          tipAmount: tipAmount || 0,
           videoUploaded: videoFiles.length > 0,
-          videoCount: videoFiles.length 
+          videoCount: videoFiles.length,
+          paymentIntentId: paymentId,
+          paymentAmount: planAmount + (tipAmount || 0),
+          timeSlotId: selectedTimeSlot?.slotId,
+          appointmentDate: selectedTimeSlot?.date,
         }),
       });
       
       if (res.ok) {
         const data = await res.json();
         const assessmentId = data.id;
+        
+        // Book the time slot if selected
+        if (selectedTimeSlot) {
+          try {
+            await fetch("/api/timeslots/book", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                timeSlotId: selectedTimeSlot.slotId,
+                appointmentId: assessmentId,
+              }),
+            });
+          } catch (slotError) {
+            console.error("Time slot booking failed:", slotError);
+            // Continue anyway - appointment is created
+          }
+        }
         
         // If there are video files, upload them
         if (videoFiles.length > 0) {
@@ -444,6 +499,23 @@ export default function BookPage() {
         }
         
         router.push(`/book/confirmation?clientId=${data.clientId}&petName=${encodeURIComponent(form.petName)}`);
+      } else {
+        const errorData = await res.json();
+        console.error("Server validation error:", errorData);
+        
+        // Show detailed error message
+        if (errorData.details && Array.isArray(errorData.details)) {
+          const missingFields = errorData.details.map((d: any) => d.field).join(', ');
+          alert(`Please fill in all required fields: ${missingFields}`);
+        } else {
+          alert(errorData.error || 'Failed to submit booking. Please try again.');
+        }
+        throw new Error('Failed to submit appointment');
+      }
+    } catch (error) {
+      console.error("Submission error:", error);
+      if (!(error instanceof Error) || !error.message.includes('Failed to submit appointment')) {
+        alert("Failed to submit booking. Please try again.");
       }
     } finally { 
       setLoading(false); 
@@ -690,6 +762,11 @@ export default function BookPage() {
                     <PillInput id="preferredDate" label="Preferred consultation date (optional)" type="date" required={false} value={form.preferredDate} onChange={(v) => update("preferredDate", v)} />
                     <PillTextarea id="additionalInfo" label="Anything else we should know?" placeholder="Any other information that might be helpful" value={form.additionalInfo} onChange={(v) => update("additionalInfo", v)} required={false} rows={3} />
                     
+                    {/* Optional Tip Section */}
+                    <div className="mt-8 mb-6">
+                      <TipSection selectedTip={tipAmount} onTipSelect={setTipAmount} />
+                    </div>
+                    
                     {/* Video upload */}
                     <div className="mt-2">
                       <label className="text-xs font-semibold text-primary-900 font-sans mb-2 block">
@@ -762,6 +839,13 @@ export default function BookPage() {
                               <span className="text-sm font-semibold text-accent-700">Behaviour video uploaded</span>
                             </div>
                           )}
+                          
+                          {tipAmount && tipAmount > 0 && (
+                            <div className="bg-accent-50 rounded-xl p-3 flex items-center gap-2">
+                              <Check className="w-5 h-5 text-accent-600" strokeWidth={2.5} />
+                              <span className="text-sm font-semibold text-accent-700">Tip included: £{tipAmount}</span>
+                            </div>
+                          )}
                         </div>
                       </div>
 
@@ -791,12 +875,36 @@ export default function BookPage() {
                       </div>
                     </div>
                   )}
+
+                  {/* STEP 9: Time Slot Selection */}
+                  {step === 9 && (
+                    <div>
+                      <TimeSlotSelector
+                        consultationType={consultationType}
+                        onSlotSelect={(slotId, date, startTime, endTime) => {
+                          setSelectedTimeSlot({ slotId, date, startTime, endTime });
+                        }}
+                        selectedSlotId={selectedTimeSlot?.slotId}
+                      />
+                    </div>
+                  )}
+
+                  {/* STEP 10: Payment */}
+                  {step === 10 && consentGiven && (
+                    <PaymentStep
+                      amount={planAmount + (tipAmount || 0)}
+                      consultationType={consultationType}
+                      customerEmail={form.email}
+                      customerName={form.ownerName}
+                      onPaymentComplete={handlePaymentComplete}
+                    />
+                  )}
                 </motion.div>
               </AnimatePresence>
 
               {/* Nav buttons */}
               <div className="flex items-center justify-between mt-8 pt-6 border-t-2 border-primary-100">
-                {step > 0 ? (
+                {step > 0 && step !== 10 ? (
                   <button 
                     onClick={() => setStep((s) => s - 1)} 
                     className="flex items-center gap-2 px-6 py-2.5 rounded-full border-2 border-primary-200 bg-white text-primary-900 font-semibold text-sm hover:border-primary-700 hover:bg-primary-50 transition-all"
@@ -810,19 +918,47 @@ export default function BookPage() {
                     onClick={() => setStep((s) => s + 1)} 
                     className="px-8 py-3 rounded-full bg-primary-700 text-white font-bold text-sm hover:bg-primary-800 transition-all shadow-md hover:shadow-lg"
                   >
-                    {step === 7 ? "Review →" : "Continue →"}
+                    Next Step →
                   </button>
-                ) : (
+                ) : step === 8 ? (
                   <button 
-                    onClick={submit} 
-                    disabled={loading} 
-                    className={`px-8 py-3 rounded-full font-bold text-sm transition-all shadow-md hover:shadow-lg ${
-                      loading ? 'bg-ink-400 cursor-not-allowed' : 'bg-accent-600 hover:bg-accent-700 text-white'
+                    onClick={() => {
+                      if (!consentGiven) {
+                        alert("Please agree to our privacy policy before proceeding.");
+                        return;
+                      }
+                      // Go to time slot selection
+                      setStep(9);
+                    }}
+                    disabled={!consentGiven}
+                    className={`px-8 py-3 rounded-full font-bold text-sm transition-all shadow-md ${
+                      consentGiven
+                        ? 'bg-accent-600 text-white hover:bg-accent-700 hover:shadow-lg'
+                        : 'bg-ink-300 text-ink-500 cursor-not-allowed'
                     }`}
                   >
-                    {loading ? "Submitting..." : "Submit Assessment"}
+                    Select Appointment Time →
                   </button>
-                )}
+                ) : step === 9 ? (
+                  <button 
+                    onClick={() => {
+                      if (!selectedTimeSlot) {
+                        alert("Please select a time slot before proceeding.");
+                        return;
+                      }
+                      // Go to payment step
+                      setStep(10);
+                    }}
+                    disabled={!selectedTimeSlot}
+                    className={`px-8 py-3 rounded-full font-bold text-sm transition-all shadow-md ${
+                      selectedTimeSlot
+                        ? 'bg-accent-600 text-white hover:bg-accent-700 hover:shadow-lg'
+                        : 'bg-ink-300 text-ink-500 cursor-not-allowed'
+                    }`}
+                  >
+                    {planAmount > 0 ? 'Proceed to Payment →' : 'Complete Booking →'}
+                  </button>
+                ) : null}
               </div>
             </motion.div>
           </div>
@@ -832,5 +968,22 @@ export default function BookPage() {
       <FAQSection />
       <FollowUs />
     </>
+  );
+}
+
+
+// Wrap with Suspense to handle useSearchParams
+export default function BookPage() {
+  return (
+    <Suspense fallback={
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-4 border-primary-700 border-t-transparent mx-auto"></div>
+          <p className="mt-4 text-ink-600">Loading...</p>
+        </div>
+      </div>
+    }>
+      <BookPageContent />
+    </Suspense>
   );
 }

@@ -10,6 +10,8 @@ import {
   TrendingUp,
   Clock,
   CheckCircle,
+  CreditCard,
+  PoundSterling,
 } from "lucide-react";
 
 export default function AdminDashboardPage() {
@@ -18,7 +20,9 @@ export default function AdminDashboardPage() {
     pending: 0, 
     reviewed: 0, 
     scheduled: 0, 
-    total: 0 
+    total: 0,
+    totalRevenue: 0,
+    paidBookings: 0,
   });
   const [loading, setLoading] = useState(true);
 
@@ -29,11 +33,22 @@ export default function AdminDashboardPage() {
       if (res.ok) {
         const appointments = await res.json();
         if (Array.isArray(appointments)) {
+          // Calculate revenue stats
+          const totalRevenue = appointments.reduce((sum, a) => {
+            return sum + (a.paymentAmount || 0);
+          }, 0);
+          
+          const paidBookings = appointments.filter(a => 
+            a.paymentStatus === 'succeeded' && (a.paymentAmount || 0) > 0
+          ).length;
+          
           setStats({
             total: appointments.length,
             pending: appointments.filter((a) => a.status === "pending").length,
             reviewed: appointments.filter((a) => a.status === "reviewed").length,
             scheduled: appointments.filter((a) => a.status === "scheduled").length,
+            totalRevenue,
+            paidBookings,
           });
         }
       }
@@ -128,10 +143,33 @@ export default function AdminDashboardPage() {
         </div>
       </div>
 
+      {/* Revenue Stats */}
+      <div className="grid gap-6 sm:grid-cols-2">
+        <div className="bg-gradient-to-br from-primary-700 to-primary-900 rounded-2xl shadow-lg p-6 text-white">
+          <div className="flex items-center justify-between mb-2">
+            <p className="text-sm font-semibold text-primary-100">Total Revenue</p>
+            <PoundSterling className="w-8 h-8 text-white opacity-30" strokeWidth={1.5} />
+          </div>
+          <p className="text-4xl font-bold">£{stats.totalRevenue.toFixed(2)}</p>
+          <p className="text-xs text-primary-200 mt-1">From all paid bookings</p>
+        </div>
+
+        <div className="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-accent-600">
+          <div className="flex items-center justify-between mb-2">
+            <p className="text-sm font-semibold text-ink-600">Paid Bookings</p>
+            <CreditCard className="w-8 h-8 text-accent-600 opacity-20" strokeWidth={1.5} />
+          </div>
+          <p className="text-4xl font-bold text-accent-700">{stats.paidBookings}</p>
+          <p className="text-xs text-ink-500 mt-1">
+            {stats.paidBookings > 0 && `Avg: £${(stats.totalRevenue / stats.paidBookings).toFixed(2)}`}
+          </p>
+        </div>
+      </div>
+
       {/* Quick Actions */}
       <div>
         <h2 className="font-display text-xl text-primary-900 mb-4">Quick Actions</h2>
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           <Link
             href="/admin/assessments"
             className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all p-6 group"
@@ -143,6 +181,19 @@ export default function AdminDashboardPage() {
               <h3 className="font-display text-lg text-primary-900">View Assessments</h3>
             </div>
             <p className="text-sm text-ink-600">Review and manage all client assessments</p>
+          </Link>
+
+          <Link
+            href="/admin/transactions"
+            className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all p-6 group"
+          >
+            <div className="flex items-center gap-4 mb-3">
+              <div className="w-12 h-12 rounded-xl bg-green-100 group-hover:bg-green-600 transition-all flex items-center justify-center">
+                <CreditCard className="w-6 h-6 text-green-600 group-hover:text-white transition-all" strokeWidth={2} />
+              </div>
+              <h3 className="font-display text-lg text-primary-900">Transactions</h3>
+            </div>
+            <p className="text-sm text-ink-600">View all payments and plan purchases</p>
           </Link>
 
           <Link

@@ -24,11 +24,15 @@ interface ServiceContent {
 
 /* Sidebar service list */
 const allSidebarServices = [
-  { label: "Dog Behaviour Consultation",   slug: "dog-behaviour" },
-  { label: "Cat Behaviour Consultation",   slug: "cat-behaviour" },
-  { label: "Puppy Training & Socialisation", slug: "puppy-training" },
-  { label: "Virtual Online Consultation",  slug: "virtual-consultation" },
-  { label: "Pet Behaviour Expert Witness", slug: "expert-witness" },
+  { label: "Dog Behaviourist",   slug: "dog-behaviourist" },
+  { label: "Dog Whisperer",   slug: "dog-whisperer" },
+  { label: "Dog Anxiety", slug: "dog-anxiety" },
+  { label: "Dog Separation Anxiety",  slug: "dog-separation-anxiety" },
+  { label: "Dog Aggression Management", slug: "dog-aggression-management" },
+  { label: "Leash Reactivity Training", slug: "leash-reactivity-training" },
+  { label: "Puppy Foundations", slug: "puppy-foundations" },
+  { label: "Virtual Consultation", slug: "virtual-consultation" },
+  { label: "Expert Witness Services", slug: "expert-witness" },
 ];
 
 /* ─────────────────────────────────────────────
@@ -477,7 +481,7 @@ export function ServiceDetailClient({
                     return (
                       <li key={s.slug} style={{ marginBottom: "10px" }}>
                         <Link
-                          href={`/training-behaviour/${s.slug}`}
+                          href={`/services/${s.slug}`}
                           style={{
                             display: "block",
                             background: "#fff",

@@ -18,19 +18,51 @@ interface Appointment {
 export default function AdminAppointmentsPage() {
   const router = useRouter();
   const [appointments, setAppointments] = useState<Appointment[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const key = sessionStorage.getItem("neuropet-admin-key");
-    if (!key) {
-      router.push("/admin/login");
-      return;
-    }
-    fetch(`/api/appointments?key=${key}`)
-      .then((r) => r.json())
-      .then((data) => {
-        if (Array.isArray(data)) setAppointments(data);
-      });
+    const checkAuthAndFetch = async () => {
+      try {
+        // Check authentication
+        const authRes = await fetch("/api/auth/me");
+        if (!authRes.ok) {
+          router.push("/admin/login");
+          return;
+        }
+        const authData = await authRes.json();
+        if (authData.user.role !== "admin") {
+          router.push("/admin/login");
+          return;
+        }
+
+        // Fetch appointments
+        const key = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || "neuropet-admin";
+        const res = await fetch(`/api/appointments?key=${key}`);
+        if (res.ok) {
+          const data = await res.json();
+          if (Array.isArray(data)) setAppointments(data);
+        }
+      } catch (error) {
+        console.error("Error:", error);
+        router.push("/admin/login");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    checkAuthAndFetch();
   }, [router]);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-4 border-primary-700 border-t-transparent mx-auto"></div>
+          <p className="mt-4 text-ink-600">Loading appointments...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <section className="min-h-screen bg-cream pt-28 pb-16">

@@ -176,25 +176,42 @@ export function ServicesSection() {
   return (
     <section className="bg-white py-14 md:py-24">
       <Container>
+        <div className="flex flex-wrap items-end justify-between gap-4 max-w-2xl">
+          <motion.div
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+          >
+            <SectionEyebrow>Our Services</SectionEyebrow>
+            <SectionTitle className="mt-3">
+              Support for every <em className="not-italic text-primary-700">stage</em>
+            </SectionTitle>
+            <p className="mt-4 text-ink-600">
+              From puppy foundations to complex behaviour cases — tailored plans
+              built around your pet and your home.
+            </p>
+          </motion.div>
+        </div>
+        
+        {/* View More Button */}
         <motion.div
-          className="max-w-2xl"
+          className="mt-6 flex justify-end"
           variants={fadeUp}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
         >
-          <SectionEyebrow>Our Services</SectionEyebrow>
-          <SectionTitle className="mt-3">
-            Support for every <em className="not-italic text-primary-700">stage</em>
-          </SectionTitle>
-          <p className="mt-4 text-ink-600">
-            From puppy foundations to complex behaviour cases — tailored plans
-            built around your pet and your home.
-          </p>
+          <Link
+            href="/services"
+            className="inline-flex items-center gap-2 text-sm font-semibold text-primary-700 transition-colors hover:text-accent-600 border-2 border-primary-200 hover:border-accent-600 rounded-full px-6 py-2.5"
+          >
+            View All Services <ArrowRight className="h-4 w-4" strokeWidth={2} />
+          </Link>
         </motion.div>
 
         <motion.div
-          className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4"
+          className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4"
           variants={staggerContainer}
           initial="hidden"
           whileInView="visible"

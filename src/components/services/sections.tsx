@@ -4,30 +4,37 @@ import { useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import {
+  Phone,
+  MessageSquare,
+  Video,
+  Calendar,
+  CheckCircle,
+  Star,
   Dog,
   Cat,
   Baby,
-  Video,
   ShieldCheck,
+  Users,
+  BookOpen,
+  Heart,
   ClipboardList,
-  Plus,
   Minus,
+  Plus,
 } from "lucide-react";
 import { Container } from "@/components/ui/shared";
 import { fadeUp } from "@/lib/motion";
 
 /* ─────────────────────────────────────────────
-   1. HERO  — full-image, title bottom-left,
-              pink pill breadcrumb (matches screenshot)
+   1. HERO  — Dog Behavior Services Focus
 ───────────────────────────────────────────── */
 export function ServicesHero() {
   return (
-    <section style={{ position: "relative", height: "430px", overflow: "hidden" }}>
-      {/* Full-bleed background photo — dog & cat */}
+    <section style={{ position: "relative", height: "500px", overflow: "hidden" }}>
+      {/* Full-bleed background photo */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src="/images/servicebg.png"
-        alt="Dog and cat relaxing together"
+        alt="Professional dog behavior training"
         style={{
           position: "absolute",
           inset: 0,
@@ -39,14 +46,14 @@ export function ServicesHero() {
         loading="eager"
       />
 
-      {/* Very subtle left-side shadow so white text reads — matches screenshot */}
+      {/* Overlay gradient */}
       <div
         aria-hidden="true"
         style={{
           position: "absolute",
           inset: 0,
           background:
-            "linear-gradient(90deg, rgba(10,15,25,.32) 0%, rgba(10,15,25,0) 50%)",
+            "linear-gradient(135deg, rgba(30,74,64,.85) 0%, rgba(30,74,64,.65) 50%, rgba(30,74,64,.45) 100%)",
         }}
       />
 
@@ -233,45 +240,74 @@ export function ServicesIntro() {
 const allServices = [
   {
     icon: Dog,
-    title: "Dog Behaviour",
+    title: "Dog Behaviourist",
     description:
-      "Comprehensive in-home assessments for reactivity, aggression, separation anxiety, and fear-based challenges.",
-    href: "/training-behaviour/dog-behaviour",
+      "Expert behavioural consultation and assessment for all dog behaviour issues. Personalised training plans with daily WhatsApp support.",
+    href: "/services/dog-behaviourist",
+    image: "/images/dog2.png",
   },
   {
-    icon: Cat,
-    title: "Cat Behaviour",
+    icon: Heart,
+    title: "Dog Whisperer",
     description:
-      "Specialised support for litter avoidance, multi-cat tension, scratching, and indoor stress enrichment.",
-    href: "/training-behaviour/cat-behaviour",
+      "Understanding your dog's language and communication. Build a deeper bond through positive reinforcement and empathy-based training.",
+    href: "/services/dog-whisperer",
+    image: "/images/Dog Whisperer.jpg",
+  },
+  {
+    icon: ShieldCheck,
+    title: "Dog Anxiety",
+    description:
+      "Comprehensive treatment plans for generalized anxiety, fear, and stress-related behaviours in dogs.",
+    href: "/services/dog-anxiety",
+    image: "/images/dog anxiety.webp",
+  },
+  {
+    icon: Users,
+    title: "Dog Separation Anxiety",
+    description:
+      "Specialized programs to help dogs cope with being alone. Gradual desensitization with proven protocols.",
+    href: "/services/dog-separation-anxiety",
+    image: "/images/dog3.png",
+  },
+  {
+    icon: ShieldCheck,
+    title: "Dog Aggression Management",
+    description:
+      "Safe, effective protocols for managing aggression towards people, dogs, or other animals. Expert guidance throughout.",
+    href: "/services/dog-aggression-management",
+    image: "/images/Dog Aggression Management.webp",
+  },
+  {
+    icon: Dog,
+    title: "Leash Reactivity Training",
+    description:
+      "Transform stressful walks into enjoyable outings. Proven methods to reduce lunging, barking, and leash pulling.",
+    href: "/services/leash-reactivity-training",
+    image: "/images/Leash Reactivity Training.jpg",
   },
   {
     icon: Baby,
-    title: "Puppy Training",
+    title: "Puppy Foundations",
     description:
-      "Early foundation training, bite inhibition, toilet training, and safe socialisation for confident puppies.",
-    href: "/training-behaviour/puppy-training",
+      "Early foundation training, bite inhibition, toilet training, and safe socialisation for confident puppies under 6 months.",
+    href: "/services/puppy-foundations",
+    image: "/images/dog4.png",
   },
   {
     icon: Video,
     title: "Virtual Consultation",
     description:
-      "Remote video coaching sessions with continuous chat support — perfect for busy schedules.",
-    href: "/training-behaviour/virtual-consultation",
-  },
-  {
-    icon: ShieldCheck,
-    title: "Reactivity & Anxiety",
-    description:
-      "Custom desensitisation and counter-conditioning for leash reactivity, sound phobias, and separation distress.",
-    href: "/training-behaviour/dog-behaviour",   // covered under dog behaviour
+      "Remote video coaching sessions with daily WhatsApp support — perfect for busy schedules or distance clients.",
+    href: "/services/virtual-consultation",
+    image: "/images/service3.jpg",
   },
   {
     icon: ClipboardList,
-    title: "Expert Witness",
+    title: "Expert Witness Services",
     description:
       "Independent legal expert reports, risk assessments, and court testimony for animal behaviour cases.",
-    href: "/training-behaviour/expert-witness",
+    href: "/services/expert-witness",
   },
 ];
 
@@ -349,6 +385,31 @@ export function ServicesGrid() {
                 const Icon = service.icon;
                 return (
                   <div key={service.title}>
+                    {/* Service Image (if available) */}
+                    {service.image && (
+                      <div
+                        style={{
+                          width: "100%",
+                          height: "200px",
+                          margin: "0 auto 20px",
+                          borderRadius: "12px",
+                          overflow: "hidden",
+                          boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
+                        }}
+                      >
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={service.image}
+                          alt={service.title}
+                          style={{
+                            width: "100%",
+                            height: "100%",
+                            objectFit: "cover",
+                          }}
+                        />
+                      </div>
+                    )}
+                    
                     {/* SVG-style icon circle */}
                     <div
                       style={{

@@ -79,10 +79,21 @@ export interface IAppointment {
   status: "pending" | "reviewed" | "scheduled" | "completed" | "archived";
   notes?: string;
   appointmentDate?: Date;
+  timeSlotId?: string; // Reference to TimeSlot
   clientId?: string;
   videoUploaded?: boolean;
   videoCount?: number;
   videoPaths?: string[];
+  
+  // Dog Behavior Services Fields
+  consultationType?: "discovery" | "behavior-essentials" | "behavior-intensive" | "puppy-foundations";
+  tipAmount?: number;
+  
+  // Payment Fields
+  paymentIntentId?: string;
+  paymentAmount?: number;
+  paymentStatus?: "pending" | "succeeded" | "failed" | "refunded";
+  paymentDate?: Date;
   
   createdAt: Date;
   updatedAt: Date;
@@ -170,10 +181,29 @@ const AppointmentSchema = new Schema<IAppointment>(
     },
     notes: String,
     appointmentDate: Date,
+    timeSlotId: { type: String, ref: "TimeSlot" },
     clientId: { type: String, unique: true, sparse: true },
     videoUploaded: { type: Boolean, default: false },
     videoCount: { type: Number, default: 0 },
     videoPaths: [String],
+    
+    // Dog Behavior Services
+    consultationType: {
+      type: String,
+      enum: ["discovery", "behavior-essentials", "behavior-intensive", "puppy-foundations"],
+      default: "discovery",
+    },
+    tipAmount: { type: Number, default: 0 },
+    
+    // Payment Information
+    paymentIntentId: String,
+    paymentAmount: { type: Number, default: 0 },
+    paymentStatus: {
+      type: String,
+      enum: ["pending", "succeeded", "failed", "refunded"],
+      default: "pending",
+    },
+    paymentDate: Date,
   },
   { timestamps: true }
 );

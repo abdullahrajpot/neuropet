@@ -1,37 +1,27 @@
 import { NextResponse } from "next/server";
-import { jwtVerify } from "jose";
-import { cookies } from "next/headers";
+import { NextRequest } from "next/server";
+import { requireClient } from "@/middleware/auth";
 import { connectDB } from "@/lib/mongodb";
 import User from "@/lib/models/User";
 
-const JWT_SECRET = new TextEncoder().encode(
-  process.env.JWT_SECRET || "your-secret-key-change-this"
-);
-
-export async function PATCH(request: Request) {
+/**
+ * PATCH /api/client/profile
+ * 
+ * SECURITY: Uses JWT authentication, derives userId from token
+ * User can only update their own profile
+ */
+export async function PATCH(request: NextRequest) {
   try {
-    const cookieStore = await cookies();
-    const token = cookieStore.get("auth-token");
-
-    if (!token) {
-      return NextResponse.json(
-        { error: "Not authenticated" },
-        { status: 401 }
-      );
-    }
-
-    const { payload } = await jwtVerify(token.value, JWT_SECRET);
-
-    if (payload.role !== "client") {
-      return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 403 }
-      );
+    // SECURITY: Verify authentication and get user from JWT
+    const user = await requireClient(request);
+    if (user instanceof NextResponse) {
+      return user; // Return error response
     }
 
     const body = await request.json();
     const { name, email } = body;
 
+    // Input validation
     if (!name || !email) {
       return NextResponse.json(
         { error: "Name and email are required" },
@@ -39,12 +29,22 @@ export async function PATCH(request: Request) {
       );
     }
 
+    // Email format validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return NextResponse.json(
+        { error: "Invalid email format" },
+        { status: 400 }
+      );
+    }
+
     await connectDB();
 
     // Check if email is already taken by another user
+    // SECURITY: Exclude current user from check
     const existingUser = await User.findOne({ 
       email, 
-      _id: { $ne: payload.userId } 
+      _id: { $ne: user.userId } 
     });
 
     if (existingUser) {
@@ -54,9 +54,9 @@ export async function PATCH(request: Request) {
       );
     }
 
-    // Update user
+    // SECURITY: Update using userId from verified JWT
     const updatedUser = await User.findByIdAndUpdate(
-      payload.userId,
+      user.userId,
       { name, email },
       { new: true }
     ).select("-password");

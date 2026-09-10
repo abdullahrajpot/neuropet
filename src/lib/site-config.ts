@@ -1,8 +1,8 @@
 export const siteConfig = {
   name: "NeuroPet",
-  tagline: "Expert pet behaviour consultation for happier homes",
+  tagline: "Expert dog behaviour consultation for happier homes",
   description:
-    "Professional dog and cat behavioural consultation, puppy training, and virtual sessions tailored to your pet's needs.",
+    "Professional dog behaviour consultation, puppy training, and virtual sessions with daily WhatsApp support. Evidence-based training delivered remotely.",
   url: "https://neuropet.com",
   address: "123 Pet Care Lane, London, UK",
   phone: "+44 20 7946 0958",
@@ -26,66 +26,68 @@ export const navLinks = [
     label: "Services",
     href: "/services",
     children: [
-      { label: "Overview of All Services", href: "/services" },
-      { label: "Dog Behavioural Consultation", href: "/training-behaviour/dog-behaviour" },
-      { label: "Cat Behavioural Consultation", href: "/training-behaviour/cat-behaviour" },
-      { label: "Puppy Training & Socialisation", href: "/training-behaviour/puppy-training" },
-      { label: "Virtual / Online Consultation", href: "/training-behaviour/virtual-consultation" },
-      { label: "Pet Behaviour Expert Witness", href: "/training-behaviour/expert-witness" },
+      { label: "All Services Overview", href: "/services" },
+      { label: "Dog Behaviourist", href: "/services/dog-behaviourist" },
+      { label: "Dog Whisperer", href: "/services/dog-whisperer" },
+      { label: "Dog Anxiety Treatment", href: "/services/dog-anxiety" },
+      { label: "Separation Anxiety Program", href: "/services/dog-separation-anxiety" },
+      { label: "Aggression Management", href: "/services/dog-aggression-management" },
+      { label: "Leash Reactivity Training", href: "/services/leash-reactivity-training" },
+      { label: "Puppy Foundations", href: "/services/puppy-foundations" },
+      { label: "Virtual Consultation", href: "/services/virtual-consultation" },
     ],
   },
-  { label: "Media & Speaking", href: "/media-speaking" },
-  { label: "Events", href: "/events" },
+  { label: "Pricing & Plans", href: "/pricing" },
   { label: "Blog", href: "/blog" },
 ];
 
 export const footerExplore = [
   { label: "About", href: "/about" },
   { label: "Blog", href: "/blog" },
+  { label: "Pricing & Plans", href: "/pricing" },
   { label: "Book a Consultation", href: "/book" },
-  { label: "Pet Profile / My Pets", href: "/pet-profile" },
   { label: "Contact", href: "/contact" },
 ];
 
 export const footerMedia = [
-  { label: "Press, Radio, Podcasts & TV", href: "/media-speaking" },
+  { label: "Press & Media", href: "/media-speaking" },
   { label: "Speaking Engagements", href: "/media-speaking#speaking" },
   { label: "Events", href: "/events" },
 ];
 
 export const footerTraining = [
-  { label: "Dog Behavioural Consultation", href: "/training-behaviour/dog-behaviour" },
-  { label: "Cat Behavioural Consultation", href: "/training-behaviour/cat-behaviour" },
-  { label: "Puppy Training", href: "/training-behaviour/puppy-training" },
-  { label: "Pet Behaviour Expert Witness", href: "/training-behaviour/expert-witness" },
+  { label: "Behaviour Essentials Program", href: "/pricing#essentials" },
+  { label: "Behaviour Intensive Program", href: "/pricing#intensive" },
+  { label: "Puppy Foundations Program", href: "/pricing#puppy" },
+  { label: "Free Discovery Call", href: "/book?type=discovery" },
 ];
 
 export const services = [
   {
-    title: "Dog Behaviour",
-    description: "Tailored plans for anxiety, aggression, reactivity, and everyday obedience challenges.",
-    href: "/training-behaviour/dog-behaviour",
-    image: "/images/service1.jpg",
+    title: "Dog Behaviourist",
+    description: "Expert behavioural consultation and assessment for all dog behaviour issues. Personalised training plans with daily WhatsApp support.",
+    href: "/services/dog-behaviourist",
+    image: "/images/dog2.png",
     icon: "dog",
   },
   {
-    title: "Cat Behaviour",
-    description: "Support for litter issues, multi-cat tension, scratching, and indoor enrichment.",
-    href: "/training-behaviour/cat-behaviour",
-    image: "/images/cat.jpg",
-    icon: "cat",
+    title: "Dog Anxiety Treatment",
+    description: "Comprehensive treatment plans for generalized anxiety, fear, and stress-related behaviours in dogs.",
+    href: "/services/dog-anxiety",
+    image: "/images/dog anxiety.webp",
+    icon: "shield",
   },
   {
-    title: "Puppy Training",
-    description: "Early socialisation, bite inhibition, and foundation skills for confident puppies.",
-    href: "/training-behaviour/puppy-training",
-    image: "/images/service2.jpg",
+    title: "Puppy Foundations",
+    description: "30-day program for puppies under 6 months. Build confidence, prevent problems, and start right.",
+    href: "/services/puppy-foundations",
+    image: "/images/dog4.png",
     icon: "puppy",
   },
   {
     title: "Virtual Consultation",
-    description: "Remote sessions with video review — ideal for follow-ups and busy schedules.",
-    href: "/training-behaviour/virtual-consultation",
+    description: "Remote video coaching sessions with daily WhatsApp support — perfect for busy schedules or distance clients.",
+    href: "/services/virtual-consultation",
     image: "/images/service3.jpg",
     icon: "video",
   },

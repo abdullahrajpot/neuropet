@@ -11,6 +11,12 @@ import {
   Stethoscope,
   Headphones,
   Video,
+  UserCheck,
+  Dog,
+  Activity,
+  Utensils,
+  Star,
+  Sparkles,
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Container, SectionEyebrow, SectionTitle, RoundedImage } from "@/components/ui/shared";
@@ -211,84 +217,132 @@ export function AboutMission() {
 }
 
 /* ── 3. Expertise cards — Vetrio-style: 3 distinct rounded cards (2 white + 1 cyan CTA) ── */
-const highlightCards = [
-  {
-    icon: Stethoscope,
-    title: "17 Expertise",
-    description:
-      "Over three decades of veterinary behaviour experience across complex canine and feline cases.",
-    variant: "light" as const,
-  },
-  {
-    icon: Headphones,
-    title: "24/7 Support Care",
-    description:
-      "Email and phone support between sessions so you never feel stuck implementing your plan.",
-    variant: "light" as const,
-  },
-  {
-    icon: Video,
-    title: "Online Consultation",
-    description:
-      "Book a virtual session from anywhere — ideal for follow-ups and busy schedules.",
-    variant: "cta" as const,
-  },
-];
+const trainingResults = {
+  left: [
+    {
+      iconPath: "/icons/dog (1).png",
+      title: "Greeting\nPeople Politely",
+    },
+    {
+      iconPath: "/icons/dog-training (1).png",
+      title: "Going for\nRelaxed Walks",
+    },
+    {
+      iconPath: "/icons/dog-training.png",
+      title: "Accepting\nGrooming & Veterinary Care",
+    },
+  ],
+  right: [
+    {
+      iconPath: "/icons/bark.png",
+      title: "Playing\nat the Park",
+    },
+    {
+      iconPath: "/icons/pet-food.png",
+      title: "Going to\nRestaurants",
+    },
+    {
+      iconPath: "/icons/dog (2).png",
+      title: "Getting\nthe Right Attention",
+    },
+  ],
+};
 
 export function AboutHighlightCards() {
   return (
-    <section className="bg-cream py-16 md:py-24">
+    <section className="bg-white py-16 md:py-24">
       <Container>
+        {/* Section Title */}
         <motion.div
-          className="grid gap-6 md:grid-cols-3 md:gap-8"
+          className="text-center mb-16"
+          variants={fadeUp}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+        >
+          <h2 className="font-display text-4xl font-semibold text-primary-900 mb-4">
+            After Our Training
+          </h2>
+          <p className="text-ink-600 text-base">
+            We can help you reach whatever goal you may want to achieve with your dog.
+          </p>
+        </motion.div>
+
+        {/* 3-Column Grid Layout */}
+        <motion.div
+          className="grid md:grid-cols-[1fr_auto_1fr] items-center gap-10 md:gap-12 max-w-5xl mx-auto"
           variants={staggerContainer}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
         >
-          {highlightCards.map(({ icon: Icon, title, description, variant }) => (
-            <motion.article
-              key={title}
-              variants={fadeUp}
-              className={
-                variant === "cta"
-                  ? "flex flex-col items-start rounded-2xl bg-[#139a9e] p-8 md:p-10 text-left text-white shadow-[0_12px_32px_rgba(19,154,158,0.25)] transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl"
-                  : "flex flex-col items-start rounded-2xl bg-white p-8 md:p-10 text-left border border-slate-100 shadow-[0_10px_30px_rgba(0,0,0,0.05)] transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
-              }
-            >
-              <span
-                className={
-                  variant === "cta"
-                    ? "flex h-14 w-14 items-center justify-center rounded-2xl bg-white/20 text-white mb-6"
-                    : "flex h-14 w-14 items-center justify-center rounded-2xl bg-[#e6f4f6] text-[#139a9e] mb-6"
-                }
+          {/* LEFT COLUMN */}
+          <div className="flex flex-col gap-8 md:gap-9">
+            {trainingResults.left.map((item, index) => (
+              <motion.div
+                key={index}
+                variants={fadeUp}
+                className="flex items-center gap-4"
               >
-                <Icon className="h-7 w-7" strokeWidth={1.75} />
-              </span>
-              <h3
-                className={`text-xl font-bold tracking-tight mb-3 ${
-                  variant === "cta" ? "text-white" : "text-slate-900"
-                }`}
+                {/* Badge Circle */}
+                <div className="w-16 h-16 min-w-[64px] rounded-full border-2 border-[#a9d8e2] bg-white flex items-center justify-center shadow-sm">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={item.iconPath}
+                    alt=""
+                    className="w-7 h-7 object-contain"
+                    style={{ filter: 'invert(58%) sepia(18%) saturate(851%) hue-rotate(46deg) brightness(95%) contrast(87%)' }}
+                  />
+                </div>
+                {/* Label */}
+                <div className="text-sm font-medium text-primary-900 leading-snug whitespace-pre-line">
+                  {item.title}
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* CENTER PHOTO */}
+          <motion.div
+            variants={fadeUp}
+            className="relative w-[340px] h-[340px] mx-auto flex items-center justify-center md:order-none order-first"
+          >
+            {/* Teal circle background */}
+            <div className="absolute w-[290px] h-[290px] rounded-full bg-[#8ec9d6] z-0" />
+            {/* Dog image */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/images/dog4.png"
+              alt="Trained dog"
+              className="relative z-10 w-[320px] h-[320px] object-cover rounded-full"
+            />
+          </motion.div>
+
+          {/* RIGHT COLUMN */}
+          <div className="flex flex-col gap-8 md:gap-9 md:items-end">
+            {trainingResults.right.map((item, index) => (
+              <motion.div
+                key={index}
+                variants={fadeUp}
+                className="flex items-center gap-4 md:flex-row-reverse md:text-right"
               >
-                {title}
-              </h3>
-              <p
-                className={`text-sm leading-relaxed mb-6 ${
-                  variant === "cta" ? "text-white/85" : "text-slate-600"
-                }`}
-              >
-                {description}
-              </p>
-              {variant === "cta" && (
-                <Button
-                  href="/book"
-                  className="mt-auto bg-[#F8C245] hover:bg-[#eab308] text-slate-900 font-bold px-7 py-3 rounded-xl shadow border-none transition-all duration-200"
-                >
-                  Consult now
-                </Button>
-              )}
-            </motion.article>
-          ))}
+                {/* Badge Circle */}
+                <div className="w-16 h-16 min-w-[64px] rounded-full border-2 border-[#a9d8e2] bg-white flex items-center justify-center shadow-sm">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={item.iconPath}
+                    alt=""
+                    className="w-7 h-7 object-contain"
+                    style={{ filter: 'invert(58%) sepia(18%) saturate(851%) hue-rotate(46deg) brightness(95%) contrast(87%)' }}
+                  />
+                </div>
+                {/* Label */}
+                <div className="text-sm font-medium text-primary-900 leading-snug whitespace-pre-line">
+                  {item.title}
+                </div>
+              </motion.div>
+            ))}
+          </div>
         </motion.div>
       </Container>
     </section>
