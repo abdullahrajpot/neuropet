@@ -10,6 +10,9 @@ import {
   RATE_LIMITS,
 } from "@/lib/rate-limit";
 
+// Use Node.js runtime (not Edge) for JWT operations
+export const runtime = "nodejs";
+
 // SECURITY: No fallback secret
 if (!process.env.JWT_SECRET) {
   throw new Error(
