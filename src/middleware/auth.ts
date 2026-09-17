@@ -20,8 +20,8 @@ if (!JWT_SECRET) {
 
 const SECRET = new TextEncoder().encode(JWT_SECRET);
 
-// JWT Payload Interface
-export interface JWTPayload {
+// App auth token payload (distinct from jose's JWTPayload)
+export interface AuthTokenPayload {
   userId: string;
   email: string;
   name: string;
@@ -32,7 +32,7 @@ export interface JWTPayload {
 
 // Extended Request with User
 export interface AuthenticatedRequest extends NextRequest {
-  user: JWTPayload;
+  user: AuthTokenPayload;
 }
 
 /**
@@ -41,7 +41,7 @@ export interface AuthenticatedRequest extends NextRequest {
  */
 export async function verifyAuth(
   request: NextRequest
-): Promise<{ user: JWTPayload } | { error: string; status: number }> {
+): Promise<{ user: AuthTokenPayload } | { error: string; status: number }> {
   try {
     // Try Authorization header first (Bearer token)
     const authHeader = request.headers.get("authorization");
@@ -79,7 +79,16 @@ export async function verifyAuth(
     }
 
     return {
-      user: payload as JWTPayload,
+      user: {
+        userId: String(payload.userId),
+        email: String(payload.email),
+        name: String(payload.name ?? ""),
+        role: payload.role as "admin" | "client",
+        ...(payload.clientId ? { clientId: String(payload.clientId) } : {}),
+        ...(payload.assessmentId
+          ? { assessmentId: String(payload.assessmentId) }
+          : {}),
+      },
     };
   } catch (error) {
     console.error("JWT verification failed:", error);
@@ -95,7 +104,7 @@ export async function verifyAuth(
  */
 export async function requireAuth(
   request: NextRequest
-): Promise<JWTPayload | NextResponse> {
+): Promise<AuthTokenPayload | NextResponse> {
   const result = await verifyAuth(request);
 
   if ("error" in result) {
@@ -114,7 +123,7 @@ export async function requireAuth(
  */
 export async function requireAdmin(
   request: NextRequest
-): Promise<JWTPayload | NextResponse> {
+): Promise<AuthTokenPayload | NextResponse> {
   const result = await verifyAuth(request);
 
   if ("error" in result) {
@@ -139,7 +148,7 @@ export async function requireAdmin(
  */
 export async function requireClient(
   request: NextRequest
-): Promise<JWTPayload | NextResponse> {
+): Promise<AuthTokenPayload | NextResponse> {
   const result = await verifyAuth(request);
 
   if ("error" in result) {
@@ -164,7 +173,7 @@ export async function requireClient(
  * SECURITY: Prevents users from accessing other users' data
  */
 export function canAccessResource(
-  user: JWTPayload,
+  user: AuthTokenPayload,
   resourceUserId: string
 ): boolean {
   // Admins can access all resources
@@ -180,7 +189,7 @@ export function canAccessResource(
  * Check if user owns assessment (for clients)
  */
 export function canAccessAssessment(
-  user: JWTPayload,
+  user: AuthTokenPayload,
   assessmentId: string
 ): boolean {
   // Admins can access all assessments

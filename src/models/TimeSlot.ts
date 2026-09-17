@@ -56,13 +56,7 @@ const TimeSlotSchema = new Schema<ITimeSlot>(
     },
     notes: String,
   },
-  { 
-    timestamps: true,
-    // Compound index for unique date + time combinations
-    indexes: [
-      { date: 1, startTime: 1 }
-    ]
-  }
+  { timestamps: true }
 );
 
 // Create compound unique index
