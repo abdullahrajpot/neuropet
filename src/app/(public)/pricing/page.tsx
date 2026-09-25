@@ -3,7 +3,7 @@
 import { Container } from "@/components/ui/shared";
 import { dogBehaviorPlans } from "@/data/dogBehaviorServices";
 import Link from "next/link";
-import { Check, Phone } from "lucide-react";
+import { Check, Phone, Calendar, FileText, Video, ClipboardCheck, MessageCircle, BookOpen } from "lucide-react";
 import { motion } from "framer-motion";
 
 const fadeUp = {
@@ -112,37 +112,52 @@ export default function PricingPage() {
   return (
     <>
       {/* Hero Section with Background Image */}
-      <section className="relative h-[600px] bg-slate-950 flex items-center overflow-hidden">
-        {/* Background image */}
+      <section className="relative min-h-[70vh] md:h-[600px] bg-primary-950 flex items-center overflow-hidden">
+        {/* Background image with overlay */}
         <div
-          className="absolute inset-0 bg-cover bg-center"
+          className="absolute inset-0 bg-cover bg-center opacity-40"
           style={{
             backgroundImage: "url(/images/servicepg3.jpg)",
           }}
           aria-hidden="true"
         />
-        {/* Dark overlay gradient */}
-        <div className="absolute inset-0 bg-gradient-to-r from-slate-950/90 via-slate-950/75 to-slate-950/60" aria-hidden="true" />
+        {/* Gradient overlay for better text contrast */}
+        <div className="absolute inset-0 bg-gradient-to-r from-primary-950/95 via-primary-900/90 to-primary-800/80" aria-hidden="true" />
         
-        <Container className="relative z-10">
+        <Container className="relative z-10 py-20">
           <motion.div
             initial="hidden"
             animate="visible"
             variants={fadeUp}
             className="max-w-3xl"
           >
-            <h1 className="font-display text-5xl md:text-6xl lg:text-7xl text-white mb-6 leading-tight drop-shadow-lg">
+            <h1 className="font-display text-5xl md:text-6xl lg:text-7xl text-white mb-6 leading-tight drop-shadow-2xl">
               Transform Your Dog&apos;s <span className="text-accent-400">Behaviour</span>
             </h1>
-            <p className="text-xl md:text-2xl text-slate-200 mb-8 leading-relaxed">
+            <p className="text-xl md:text-2xl text-white/95 mb-10 leading-relaxed drop-shadow-lg">
               Daily 1-to-1 expert support, personalised training plans, and real-life guidance
             </p>
+            <div className="flex flex-col sm:flex-row gap-4">
+              <Link
+                href="/book?type=discovery"
+                className="inline-flex items-center justify-center gap-3 px-8 py-4 rounded-full bg-accent-600 text-white text-lg font-bold hover:bg-accent-700 transition-all shadow-xl hover:shadow-2xl hover:scale-105"
+              >
+                <Phone className="w-5 h-5" />
+                Book Free Discovery Call
+              </Link>
+              <Link
+                href="#programs"
+                className="inline-flex items-center justify-center gap-3 px-8 py-4 rounded-full bg-white/10 backdrop-blur-sm text-white text-lg font-bold hover:bg-white/20 transition-all border-2 border-white/30"
+              >
+                View Programs
+              </Link>
+            </div>
           </motion.div>
         </Container>
       </section>
 
       {/* Behaviour Programs - 4 Plans with Choose Plan styling */}
-      <section className="py-20 bg-white">
+      <section id="programs" className="py-20 bg-white scroll-mt-20">
         <Container>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -441,7 +456,7 @@ export default function PricingPage() {
                 className="grid grid-cols-[56px_1fr] gap-5 mb-9"
               >
                 <div className="w-14 h-14 rounded-full bg-gradient-to-br from-primary-700 to-primary-900 flex items-center justify-center shadow-lg border-4 border-cream relative z-10">
-                  <Check className="w-6 h-6 text-white" strokeWidth={2.5} />
+                  <ClipboardCheck className="w-6 h-6 text-white" strokeWidth={2.5} />
                 </div>
                 <div>
                   <h3 className="text-lg font-semibold text-primary-900 mb-1">
@@ -462,7 +477,7 @@ export default function PricingPage() {
                 className="grid grid-cols-[56px_1fr] gap-5 mb-9"
               >
                 <div className="w-14 h-14 rounded-full bg-gradient-to-br from-primary-700 to-primary-900 flex items-center justify-center shadow-lg border-4 border-cream relative z-10">
-                  <Phone className="w-6 h-6 text-white" strokeWidth={2.5} />
+                  <Calendar className="w-6 h-6 text-white" strokeWidth={2.5} />
                 </div>
                 <div>
                   <h3 className="text-lg font-semibold text-primary-900 mb-1">
@@ -504,7 +519,7 @@ export default function PricingPage() {
                 className="grid grid-cols-[56px_1fr] gap-5 mb-9"
               >
                 <div className="w-14 h-14 rounded-full bg-gradient-to-br from-primary-700 to-primary-900 flex items-center justify-center shadow-lg border-4 border-cream relative z-10">
-                  <Check className="w-6 h-6 text-white" strokeWidth={2.5} />
+                  <FileText className="w-6 h-6 text-white" strokeWidth={2.5} />
                 </div>
                 <div>
                   <h3 className="text-lg font-semibold text-primary-900 mb-1">
@@ -525,7 +540,7 @@ export default function PricingPage() {
                 className="grid grid-cols-[56px_1fr] gap-5 mb-9"
               >
                 <div className="w-14 h-14 rounded-full bg-gradient-to-br from-primary-700 to-primary-900 flex items-center justify-center shadow-lg border-4 border-cream relative z-10">
-                  <Phone className="w-6 h-6 text-white" strokeWidth={2.5} />
+                  <Video className="w-6 h-6 text-white" strokeWidth={2.5} />
                 </div>
                 <div>
                   <h3 className="text-lg font-semibold text-primary-900 mb-1">
@@ -546,7 +561,7 @@ export default function PricingPage() {
                 className="grid grid-cols-[56px_1fr] gap-5"
               >
                 <div className="w-14 h-14 rounded-full bg-gradient-to-br from-primary-700 to-primary-900 flex items-center justify-center shadow-lg border-4 border-cream relative z-10">
-                  <Check className="w-6 h-6 text-white" strokeWidth={2.5} />
+                  <BookOpen className="w-6 h-6 text-white" strokeWidth={2.5} />
                 </div>
                 <div>
                   <h3 className="text-lg font-semibold text-primary-900 mb-1">
@@ -683,7 +698,7 @@ export default function PricingPage() {
                 className="grid grid-cols-[56px_1fr] gap-5 mb-9"
               >
                 <div className="w-14 h-14 rounded-full bg-gradient-to-br from-primary-700 to-primary-900 flex items-center justify-center shadow-lg border-4 border-white relative z-10">
-                  <Check className="w-6 h-6 text-white" strokeWidth={2.5} />
+                  <BookOpen className="w-6 h-6 text-white" strokeWidth={2.5} />
                 </div>
                 <div>
                   <h3 className="text-lg font-semibold text-primary-900 mb-1">
@@ -704,7 +719,7 @@ export default function PricingPage() {
                 className="grid grid-cols-[56px_1fr] gap-5 mb-9"
               >
                 <div className="w-14 h-14 rounded-full bg-gradient-to-br from-primary-700 to-primary-900 flex items-center justify-center shadow-lg border-4 border-white relative z-10">
-                  <Phone className="w-6 h-6 text-white" strokeWidth={2.5} />
+                  <Video className="w-6 h-6 text-white" strokeWidth={2.5} />
                 </div>
                 <div>
                   <h3 className="text-lg font-semibold text-primary-900 mb-1">
@@ -725,7 +740,7 @@ export default function PricingPage() {
                 className="grid grid-cols-[56px_1fr] gap-5 mb-9"
               >
                 <div className="w-14 h-14 rounded-full bg-gradient-to-br from-primary-700 to-primary-900 flex items-center justify-center shadow-lg border-4 border-white relative z-10">
-                  <Check className="w-6 h-6 text-white" strokeWidth={2.5} />
+                  <ClipboardCheck className="w-6 h-6 text-white" strokeWidth={2.5} />
                 </div>
                 <div>
                   <h3 className="text-lg font-semibold text-primary-900 mb-1">
@@ -746,7 +761,7 @@ export default function PricingPage() {
                 className="grid grid-cols-[56px_1fr] gap-5"
               >
                 <div className="w-14 h-14 rounded-full bg-gradient-to-br from-primary-700 to-primary-900 flex items-center justify-center shadow-lg border-4 border-white relative z-10">
-                  <Phone className="w-6 h-6 text-white" strokeWidth={2.5} />
+                  <MessageCircle className="w-6 h-6 text-white" strokeWidth={2.5} />
                 </div>
                 <div>
                   <h3 className="text-lg font-semibold text-primary-900 mb-1">
